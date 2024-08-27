@@ -1,0 +1,23 @@
+<h1>Duplicate elements</h1>
+<label>How many times did you want to duplicate it</label>
+<input id="count" value=50 type="text">
+<button id="duplicateComponent">Duplicate element</button>
+<button id="cancel">Cancel</button>
+<script>
+
+document.getElementById('duplicateComponent').onclick = () => {
+  const textbox = document.getElementById('count');
+  const count = parseInt(textbox.value, 10);
+  parent.postMessage({ pluginMessage: { type: 'duplicateComponent', count } }, '*')
+}
+
+document.getElementById('cancel').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
+}
+
+ window.onmessage = (event) => {
+    if (event.data.type === 'log') {
+      console.log(event.data.message);
+    }
+  };
+</script>
