@@ -56,14 +56,14 @@ figma.ui.onmessage = (msg) => {
           figma.notify("A component is selected!");
           console.log(node, node.type);
           
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < msg.count; i++) {
                 duplicateComponent(node, 100 + (i * 10), 100, i);
               // Clone the component
             }
 
           // Do something with the selected component
         } else {
-          figma.notify("P lease select a component or instance.");
+          figma.notify("Please select a component or instance.");
           console.log(node, node.type);
         }
       });
