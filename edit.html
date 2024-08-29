@@ -1,0 +1,24 @@
+<h2>Replace Element in Component</h2>
+<h3>Replace Text</h3>
+<input id="oldText" placeholder="Text to replace">
+<input id="newText" placeholder="New text">
+<button id="replaceTextBtn">Replace Text</button>
+
+<h3>Replace Image</h3>
+<input id="imageName" placeholder="Image name to replace">
+<input id="newImageUrl" placeholder="New image URL">
+<button id="replaceImageBtn">Replace Image</button>
+
+<script>
+document.getElementById('replaceTextBtn').onclick = () => {
+  const oldText = document.getElementById('oldText').value;
+  const newText = document.getElementById('newText').value;
+  parent.postMessage({ pluginMessage: { type: 'replace-text', oldText, newText } }, '*');
+};
+
+document.getElementById('replaceImageBtn').onclick = () => {
+  const imageName = document.getElementById('imageName').value;
+  const newImageUrl = document.getElementById('newImageUrl').value;
+  parent.postMessage({ pluginMessage: { type: 'replace-image', imageName, newImageUrl } }, '*');
+};
+</script>

@@ -88,4 +88,5 @@ figma.ui.onmessage = (msg) => {
     figma.closePlugin();
     // console.a('aa')
   }
+
 };

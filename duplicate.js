@@ -75,18 +75,4 @@ figma.ui.onmessage = (msg) => {
         figma.closePlugin();
         // console.a('aa')
     }
-    if (msg.type === "create-box") {
-        // Create a new rectangle (box)
-        const rect = figma.createRectangle();
-        // Set its size and position (customize as needed)
-        rect.resize(100, 100);
-        rect.x = figma.viewport.center.x;
-        rect.y = figma.viewport.center.y;
-        // Set properties like color
-        rect.fills = [{ type: "SOLID", color: { r: 1, g: 0, b: 0 } }]; // Red color
-        // Select the created rectangle
-        figma.currentPage.selection = [rect];
-        // Scroll to the newly created rectangle (optional)
-        figma.viewport.scrollAndZoomIntoView([rect]);
-    }
 };
