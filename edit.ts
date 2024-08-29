@@ -87,44 +87,115 @@ async function replaceText(newText: string) {
     figma.notify("No nodes selected!");
   } else {
     selection.forEach(async (node) => {
-      if (node && (node.type === "COMPONENT" || node.type === "INSTANCE")) {
-        figma.notify("A component is selected!");
-        console.log(node, node.type, node.id);
-        const componentId = node.id;
-        const newInstance = await createComponentInstance(
-          componentId,
-          100,
-          100
-        );
-        if (newInstance) {
-          // If you want to inspect the newly created instance
-          inspectComponent(newInstance);
-        }
-        console.log("node");
-        if (newInstance) {
-          // If you want to inspect the newly created instance
-          inspectComponent(newInstance);
-        }
-        console.log("node");
-        newInstance?.children.forEach((child, index) => {
-          console.log(
-            `Child ${index + 1}: ${child.name} (Type: ${child.type})`
-          );
-          if (child.type === "TEXT") {
-            await figma.loadFontAsync()
-            console.log(newText);
-            console.log(`child characters ${child.characters} `);
-            console.log(`child name ${child.name} `);
-            child.characters = 'I am a boy';
-              console.log(newInstance);
-          }
-        });
+      // Assume we have a selected ComponentNode or InstanceNode
+    //   const componentToDuplicate = figma.currentPage
+    //     .selection[0] as ComponentNode;
+        const componentToDuplicate = node;
 
-        // Do something with the selected component
+      if (componentToDuplicate) {
+        // The number of instances you want to create
+        const numberOfInstances = 3;
+
+        // Array of content to assign to the instances (could be user inputs)
+        const instanceContents = [
+          {
+            textContent: "Instance 1",
+            imageContent: "https://example.com/image1.png",
+          },
+          {
+            textContent: "Instance 2",
+            imageContent: "https://example.com/image2.png",
+          },
+          {
+            textContent: "Instance 3",
+            imageContent: "https://example.com/image3.png",
+          },
+        ];
+
+        for (let i = 0; i < numberOfInstances; i++) {
+          // Create an instance of the component
+           const newInstance = await createComponentInstance(
+            node.id,
+            100,
+            100
+          );
+
+          // Set the position of each instance (arrange them nicely)
+        //   newInstance.x =
+        //     componentToDuplicate.x + i * (componentToDuplicate.width + 20);
+        //   newInstance.y = componentToDuplicate.y;
+
+          // Find text and image layers in the instance to modify them
+          const textNode = newInstance?.findOne(
+            (node) => node.type === "TEXT"
+          ) as TextNode;
+        //   const imageNode = newInstance.findOne(
+        //     (node) => node.type === "RECTANGLE"
+        //   ) as RectangleNode;
+
+          // Modify the text content of the instance
+          if (textNode && instanceContents[i].textContent) {
+            textNode.characters = instanceContents[i].textContent;
+          }
+
+          // Modify the image content of the instance
+          //             if (imageNode && instanceContents[i].imageContent) {
+          // const imageHash = await figma.loadImage(instanceContents[i].imageContent);
+          // imageNode.fills = [
+          //   { type: "IMAGE", imageHash: imageHash.hash, scaleMode: "FILL" },
+          // ];
+          //   const imageHash = figma.createImageFromUrl(
+          //     instanceContents[i].imageContent
+          //   );
+          //   imageNode.fills = [
+          //     { type: "IMAGE", imageHash, scaleMode: "FILL" },
+          //   ];
+          // }
+
+          // Append the instance to the current page
+          figma.currentPage.appendChild(newInstance);
+        }
+
+        // Optionally, zoom into the newly created instances
+        figma.viewport.scrollAndZoomIntoView(figma.currentPage.selection);
       } else {
-        figma.notify("Please select a component or instance.");
-        console.log(node, node.type);
+        figma.notify("Please select a component to duplicate.");
       }
+
+      //   if (node && (node.type === "COMPONENT" || node.type === "INSTANCE")) {
+      //     figma.notify("A component is selected!");
+      //     console.log(node, node.type, node.id);
+      //     const componentId = node.id;
+      //     const newInstance = await createComponentInstance(
+      //       componentId,
+      //       100,
+      //       100
+      //     );
+      //     console.log("node");
+      //     if (newInstance) {
+      //       // If you want to inspect the newly created instance
+      //       inspectComponent(newInstance);
+      //     }
+      //     console.log("node");
+      //     newInstance?.children.forEach((child, index) => {
+      //       console.log(
+      //         `Child ${index + 1}: ${child.name} (Type: ${child.type})`
+      //       );
+      //       if (child.type === "TEXT") {
+      //         await figma.loadFontAsync()
+      //         console.log(newText);
+      //         console.log(`child characters ${child.characters} `);
+      //         console.log(`child name ${child.name} `);
+      //         child.characters = 'I am a boy';
+      //           console.log(newInstance);
+      //       }
+      //     });
+
+      //     // Do something with the selected component
+      //   } else {
+      //     figma.notify("Please select a component or instance.");
+      //     console.log(node, node.type);
+      //   }
     });
   }
 
