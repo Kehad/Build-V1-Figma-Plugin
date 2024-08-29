@@ -1,6 +1,6 @@
 <h2>Replace Element in Component</h2>
 <h3>Replace Text</h3>
-<input id="oldText" placeholder="Text to replace">
+<!-- <input id="oldText" placeholder="Text to replace"> -->
 <input id="newText" placeholder="New text">
 <button id="replaceTextBtn">Replace Text</button>
 
@@ -11,9 +11,11 @@
 
 <script>
 document.getElementById('replaceTextBtn').onclick = () => {
-  const oldText = document.getElementById('oldText').value;
+//   const oldText = document.getElementById('oldText').value;
   const newText = document.getElementById('newText').value;
-  parent.postMessage({ pluginMessage: { type: 'replace-text', oldText, newText } }, '*');
+  console.log(newText);
+  console.log('html')
+  parent.postMessage({ pluginMessage: { type: 'replace-text', newText } }, '*');
 };
 
 document.getElementById('replaceImageBtn').onclick = () => {
