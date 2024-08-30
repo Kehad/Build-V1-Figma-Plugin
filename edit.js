@@ -9,10 +9,51 @@ figma.ui.onmessage = async (msg) => {
     else if (msg.type === "upload-image") {
         // await replaceImage(imageName, newImageUrl);
         console.log(msg.imageBytes);
-        console.log('Upload Image');
+        console.log("Upload Image");
         //   const image = figma.createImage(new Uint8Array(msg.imageBytes));
         //   console.log(image);
         //   modifyImage()
+        const selection = figma.currentPage.selection;
+        if (selection.length === 0) {
+            figma.notify("No nodes selected!");
+        }
+        else {
+            selection.forEach(async (node) => {
+                if (node && (node.type === "COMPONENT" || node.type === "INSTANCE")) {
+                    figma.notify("A component is selected!");
+                    const componentId = node.id;
+                    for (let i = 0; i < msg.instanceValue; i++) {
+                        const newInstance = await createComponentInstance(componentId, 100, 100);
+                        newInstance === null || newInstance === void 0 ? void 0 : newInstance.children.forEach(async (child, index) => {
+                            console.log(`Child ${index + 1}: ${child.name} (Type: ${child.type})`);
+                            if (child.type === "RECTANGLE") {
+                                const rect = child;
+                                // Check if the rectangle has image fills
+                                console.log(rect);
+                                if (rect.fills) {
+                                    const fills = rect.fills;
+                                    // Find the first fill that is of type 'IMAGE'
+                                    const imageFill = fills.find((fill) => fill.type === "IMAGE");
+                                    if (imageFill) {
+                                        // Create a new image from the byte array
+                                        const newImage = figma.createImage(msg.imageBytes);
+                                        // Replace the old image fill with the new image
+                                        const newFills = [...fills];
+                                        const newImageFill = Object.assign(Object.assign({}, imageFill), { imageHash: newImage.hash });
+                                        newFills.splice(fills.indexOf(imageFill), 1, newImageFill);
+                                        // Apply the new fills to the rectangle
+                                        rect.fills = newFills;
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+                else {
+                    figma.notify("Please select a component or instance.");
+                }
+            });
+        }
     }
 };
 function nodeSelection() {
@@ -119,7 +160,7 @@ async function replaceText(newText, instanceValue) {
                             modifyTextNode(child, newText);
                         }
                         if (child.type === "RECTANGLE") {
-                            console.log('rectangle');
+                            console.log("rectangle");
                         }
                     });
                 }

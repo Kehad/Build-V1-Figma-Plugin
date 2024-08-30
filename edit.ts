@@ -6,16 +6,12 @@ figma.ui.onmessage = async (msg) => {
     // 9;
     // await replaceText(oldText, newText);
   } else if (msg.type === "upload-image") {
-      // await replaceImage(imageName, newImageUrl);
-      console.log(msg.imageBytes);
-      console.log('Upload Image')
+    // await replaceImage(imageName, newImageUrl);
+    console.log(msg.imageBytes);
+    console.log("Upload Image");
     //   const image = figma.createImage(new Uint8Array(msg.imageBytes));
-      //   console.log(image);
+    //   console.log(image);
     //   modifyImage()
-  }
-};
-
-function nodeSelection() {
     const selection = figma.currentPage.selection;
     if (selection.length === 0) {
       figma.notify("No nodes selected!");
@@ -24,18 +20,75 @@ function nodeSelection() {
         if (node && (node.type === "COMPONENT" || node.type === "INSTANCE")) {
           figma.notify("A component is selected!");
           const componentId = node.id;
-          for (let i = 0; i < instanceValue; i++) {
+          for (let i = 0; i < msg.instanceValue; i++) {
             const newInstance = await createComponentInstance(
               componentId,
               100,
               100
             );
+            newInstance?.children.forEach(async (child, index) => {
+              console.log(
+                `Child ${index + 1}: ${child.name} (Type: ${child.type})`
+              );
+              if (child.type === "RECTANGLE") {
+                const rect = child as RectangleNode;
+
+                // Check if the rectangle has image fills
+                console.log(rect)
+                if (rect.fills) {
+                  const fills = rect.fills as Paint[];
+
+                  // Find the first fill that is of type 'IMAGE'
+                  const imageFill = fills.find((fill) => fill.type === "IMAGE");
+
+                  if (imageFill) {
+                    // Create a new image from the byte array
+                    const newImage = figma.createImage(msg.imageBytes);
+
+                    // Replace the old image fill with the new image
+                    const newFills = [...fills];
+                    const newImageFill = {
+                      ...imageFill,
+                      imageHash: newImage.hash,
+                    };
+                    newFills.splice(fills.indexOf(imageFill), 1, newImageFill);
+
+                    // Apply the new fills to the rectangle
+                    rect.fills = newFills;
+                  }
+                }
+              }
+            });
           }
         } else {
           figma.notify("Please select a component or instance.");
         }
       });
     }
+  }
+};
+
+function nodeSelection() {
+  const selection = figma.currentPage.selection;
+  if (selection.length === 0) {
+    figma.notify("No nodes selected!");
+  } else {
+    selection.forEach(async (node) => {
+      if (node && (node.type === "COMPONENT" || node.type === "INSTANCE")) {
+        figma.notify("A component is selected!");
+        const componentId = node.id;
+        for (let i = 0; i < instanceValue; i++) {
+          const newInstance = await createComponentInstance(
+            componentId,
+            100,
+            100
+          );
+        }
+      } else {
+        figma.notify("Please select a component or instance.");
+      }
+    });
+  }
 }
 
 async function createComponentInstance(
@@ -106,32 +159,29 @@ async function modifyTextNode(textNode: TextNode, newText: string) {
 }
 
 function modifyImage(imageNode: RectangleNode, imageBytes: Uint8Array) {
-     
+  const rect = imageNode as RectangleNode;
 
-    const rect = imageNode as RectangleNode;
+  // Check if the rectangle has image fills
+  if (rect.fills && rect.fills.length > 0) {
+    const fills = rect.fills as Paint[];
 
-    // Check if the rectangle has image fills
-    if (rect.fills && rect.fills.length > 0) {
-        const fills = rect.fills as Paint[];
+    // Find the first fill that is of type 'IMAGE'
+    const imageFill = fills.find((fill) => fill.type === "IMAGE");
 
-        // Find the first fill that is of type 'IMAGE'
-        const imageFill = fills.find((fill) => fill.type === "IMAGE");
+    if (imageFill) {
+      // Create a new image from the byte array
+      const newImage = figma.createImage(imageBytes);
 
-        if (imageFill) {
-            // Create a new image from the byte array
-            const newImage = figma.createImage(imageBytes);
+      // Replace the old image fill with the new image
+      const newFills = [...fills];
+      const newImageFill = { ...imageFill, imageHash: newImage.hash };
+      newFills.splice(fills.indexOf(imageFill), 1, newImageFill);
 
-            // Replace the old image fill with the new image
-            const newFills = [...fills];
-            const newImageFill = { ...imageFill, imageHash: newImage.hash };
-            newFills.splice(fills.indexOf(imageFill), 1, newImageFill);
-
-            // Apply the new fills to the rectangle
-            rect.fills = newFills;
-        }
+      // Apply the new fills to the rectangle
+      rect.fills = newFills;
     }
+  }
 }
-
 
 async function replaceText(newText: string, instanceValue: number) {
   const selection = figma.currentPage.selection;
@@ -141,24 +191,28 @@ async function replaceText(newText: string, instanceValue: number) {
     selection.forEach(async (node) => {
       if (node && (node.type === "COMPONENT" || node.type === "INSTANCE")) {
         figma.notify("A component is selected!");
-          const componentId = node.id;
-          for (let i = 0; i < instanceValue; i++) {
-              const newInstance = await createComponentInstance(componentId,100,100);
-                if (newInstance) {
-                  inspectComponent(newInstance); // If you want to inspect the newly created instance
-                }
-              newInstance?.children.forEach(async (child, index) => {
-                console.log(
-                  `Child ${index + 1}: ${child.name} (Type: ${child.type})`
-                );
-                if (child.type === "TEXT") {
-                  modifyTextNode(child, newText);
-                  }
-                  if (child.type === "RECTANGLE") {
-                      console.log('rectangle')
-                  }
-              });
+        const componentId = node.id;
+        for (let i = 0; i < instanceValue; i++) {
+          const newInstance = await createComponentInstance(
+            componentId,
+            100,
+            100
+          );
+          if (newInstance) {
+            inspectComponent(newInstance); // If you want to inspect the newly created instance
           }
+          newInstance?.children.forEach(async (child, index) => {
+            console.log(
+              `Child ${index + 1}: ${child.name} (Type: ${child.type})`
+            );
+            if (child.type === "TEXT") {
+              modifyTextNode(child, newText);
+            }
+            if (child.type === "RECTANGLE") {
+              console.log("rectangle");
+            }
+          });
+        }
       } else {
         figma.notify("Please select a component or instance.");
       }
@@ -223,7 +277,6 @@ async function replaceText(newText: string, instanceValue: number) {
 //   .catch((error) => {
 //     console.error("Error loading image:", error);
 //   });
-
 
 // Function to modify children of a component instance
 // function modifyComponentChildren(instance: InstanceNode) {
