@@ -1,26 +1,60 @@
 <h2>Replace Element in Component</h2>
 <h3>Replace Text</h3>
-<input id="instanceValue" type="number" placeholder="No of instance">
-<input id="newText" placeholder="New text">
+<input id="instanceValue" type="number" placeholder="No of instance" />
+<input id="newText" placeholder="New text" />
 <button id="replaceTextBtn">Replace Text</button>
 
 <h3>Replace Image</h3>
-<input id="imageName" placeholder="Image name to replace">
-<input id="newImageUrl" placeholder="New image URL">
-<button id="replaceImageBtn">Replace Image</button>
+<input type="file" id="file-input" accept="image/*" />
+<input id="imageName" placeholder="Image name to replace" />
+<input id="newImageUrl" placeholder="New image URL" />
+<button id="upload-button" disabled>Upload</button>
 
 <script>
-document.getElementById('replaceTextBtn').onclick = () => {
-  const instanceValue = document.getElementById('instanceValue').value;
-  const newText = document.getElementById('newText').value;
-  console.log(newText);
-  console.log('html')
-  parent.postMessage({ pluginMessage: { type: 'replace-text', newText, instanceValue } }, '*');
-};
+  document.getElementById("replaceTextBtn").onclick = () => {
+    const instanceValue = document.getElementById("instanceValue").value;
+    const newText = document.getElementById("newText").value;
+    console.log(newText);
+    console.log("html");
+    parent.postMessage(
+      { pluginMessage: { type: "replace-text", newText, instanceValue } },
+      "*"
+    );
+  };
 
-document.getElementById('replaceImageBtn').onclick = () => {
-  const imageName = document.getElementById('imageName').value;
-  const newImageUrl = document.getElementById('newImageUrl').value;
-  parent.postMessage({ pluginMessage: { type: 'replace-image', imageName, newImageUrl } }, '*');
-};
+  document.getElementById("upload-button").onclick = () => {
+    const imageName = document.getElementById("imageName").value;
+    const newImageUrl = document.getElementById("newImageUrl").value;
+    parent.postMessage(
+      { pluginMessage: { type: "replace-image", imageName, newImageUrl } },
+      "*"
+    );
+  };
+
+  const fileInput = document.getElementById("file-input");
+  const uploadButton = document.getElementById("upload-button");
+
+  fileInput.addEventListener("change", function () {
+    uploadButton.disabled = !fileInput.files.length;
+  });
+
+  uploadButton.addEventListener("click", function () {
+    const file = fileInput.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const arrayBuffer = event.target.result;
+        parent.postMessage(
+          {
+            pluginMessage: {
+              type: "upload-image",
+              imageBytes: new Uint8Array(arrayBuffer),
+            },
+          },
+          "*"
+        );
+      };
+      reader.readAsArrayBuffer(file);
+    }
+  });
 </script>
