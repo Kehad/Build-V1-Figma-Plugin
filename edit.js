@@ -2,15 +2,8 @@
 figma.showUI(__html__);
 figma.ui.onmessage = async (msg) => {
     if (msg.type === "replace-all") {
-        console.log(msg);
         await replaceText(msg.newText, msg.instanceValue, msg.imageBytes);
     }
-    //  else if (msg.type === "upload-image") {
-    //   // await replaceImage(imageName, newImageUrl);
-    //   console.log(msg.imageBytes);
-    //   console.log("Upload Image");
-    // await replaceImage(msg.imageBytes);
-    // }
 };
 async function createComponentInstance(componentId, x, y) {
     // Get the component by its ID
@@ -27,39 +20,37 @@ async function createComponentInstance(componentId, x, y) {
     console.log(`Created instance of component "${component.name}" at (${x}, ${y})`);
     return instance;
 }
-function inspectComponent(node) {
-    console.log("Inspecting component:", node.name);
-    // Log the component's children
-    node.children.forEach((child, index) => {
-        console.log(`Child ${index + 1}: ${child.name} (Type: ${child.type})`);
-    });
-    // Check for component properties
-    if ("componentPropertyDefinitions" in node) {
-        const propertyDefinitions = node.componentPropertyDefinitions;
-        console.log(propertyDefinitions);
-        // Log the component property definitions
-        console.log("Component Property Definitions:", propertyDefinitions);
-        // Iterate through the properties and see what the component defines
-        for (const [propertyName, propertyDefinition] of Object.entries(propertyDefinitions)) {
-            console.log(`Property Name: ${propertyName}`);
-            console.log(`Type: ${propertyDefinition.type}`);
-            console.log(`Default Value: ${propertyDefinition.defaultValue}`);
-        }
-    }
-}
+// function inspectComponent(node: ComponentNode | InstanceNode) {
+//   // Log the component's children
+//   node.children.forEach((child, index) => {
+//     console.log(`Child ${index + 1}: ${child.name} (Type: ${child.type})`);
+//   });
+//   // Check for component properties
+//   if ("componentPropertyDefinitions" in node) {
+//     const propertyDefinitions = node.componentPropertyDefinitions;
+//     console.log(propertyDefinitions);
+//     // Log the component property definitions
+//     console.log("Component Property Definitions:", propertyDefinitions);
+//     // Iterate through the properties and see what the component defines
+//     for (const [propertyName, propertyDefinition] of Object.entries(
+//       propertyDefinitions
+//     )) {
+//       console.log(`Property Name: ${propertyName}`);
+//       console.log(`Type: ${propertyDefinition.type}`);
+//       console.log(`Default Value: ${propertyDefinition.defaultValue}`);
+//     }
+//   }
+// }
 async function modifyTextNode(textNode, newText) {
     // Check if the font is available for this text node
     const fontName = textNode.fontName;
     // Load the font asynchronously
-    //    await figma.loadFontAsync({ family: "Inter", style: "Regular" })
+    // await figma.loadFontAsync({ family: "Inter", style: "Regular" })
     await figma.loadFontAsync(fontName);
     // Once the font is loaded, you can safely modify the text
     textNode.characters = newText;
 }
 async function modifyImageNode(imageNode, imageBytes) {
-    const image = figma.createImage(new Uint8Array(imageBytes));
-    console.log("modifying image");
-    console.log(image);
     const rect = imageNode;
     //             // Check if the rectangle has image fills
     console.log(rect);
@@ -67,15 +58,12 @@ async function modifyImageNode(imageNode, imageBytes) {
         const fills = rect.fills;
         // Find the first fill that is of type 'IMAGE'
         const imageFill = fills.find((fill) => fill.type === "IMAGE");
-        console.log(imageFill);
         if (imageFill) {
             // Create a new image from the byte array
             const newImage = figma.createImage(imageBytes);
-            console.log("new image", newImage);
             const newImageFill = Object.assign({}, imageFill, {
                 imageHash: newImage.hash,
             });
-            console.log("new image fill", newImageFill);
             const updatedFills = fills.map((fill) => {
                 if (fill.type === "IMAGE") {
                     return newImageFill;
@@ -96,23 +84,18 @@ async function replaceText(newText, instanceValue, imageBytes) {
     else {
         selection.forEach(async (node) => {
             if (node && (node.type === "COMPONENT" || node.type === "INSTANCE")) {
-                figma.notify("A component is selected!");
                 const componentId = node.id;
                 for (let i = 0; i < instanceValue; i++) {
                     const newInstance = await createComponentInstance(componentId, 100, 100);
-                    if (newInstance) {
-                        inspectComponent(newInstance); // If you want to inspect the newly created instance
-                    }
+                    // if (newInstance) {
+                    //   inspectComponent(newInstance); // If you want to inspect the newly created instance
+                    // }
                     newInstance === null || newInstance === void 0 ? void 0 : newInstance.children.forEach(async (child, index) => {
                         console.log(`Child ${index + 1}: ${child.name} (Type: ${child.type})`);
                         if (child.type === "TEXT") {
-                            console.log(child, newText);
-                            console.log(child);
                             await modifyTextNode(child, newText);
                         }
                         if (child.type === "RECTANGLE") {
-                            console.log(`rectangle child ${child} ${imageBytes}`);
-                            console.log(child, imageBytes);
                             await modifyImageNode(child, imageBytes);
                         }
                     });

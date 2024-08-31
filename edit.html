@@ -19,24 +19,17 @@
 
   checkBox.addEventListener("change", function () {
     const selectedValue = checkBox.checked;
-    console.log("imge changed");
+
     console.log(selectedValue);
 
     if (selectedValue) {
-      console.log("It is selected");
       fileInput.disabled = false; // Enable the button if a value is selected
       uploadButton.disabled = true;
 
-      //     fileInput.addEventListener("change", function () {
-      //   replaceEl.disabled = !fileInput.files.length;
-      // });
       if (fileInput.files.length > 0) {
-        // A file is selected
-        console.log("file present");
         uploadButton.disabled = false; // Enable the upload button
       }
     } else {
-      console.log("Unselected");
       fileInput.disabled = true; // Disable the button if no value is selected
       uploadButton.disabled = false;
     }
@@ -45,11 +38,11 @@
   fileInput.addEventListener("change", function () {
     if (fileInput.files.length > 0) {
       // A file is selected
-      console.log("file present");
+
       uploadButton.disabled = false; // Enable the upload button
+      //     uploadButton.disabled = !fileInput.files.length;
     } else {
       // No file is selected
-      console.log("No file selected");
       uploadButton.disabled = true; // Disable the upload button
     }
   });
@@ -60,15 +53,13 @@
     const newText = document.getElementById("newText").value;
     console.log(newText);
     console.log("html");
-    // parent.postMessage(
-    //   { pluginMessage: { type: "replace-all", newText, instanceValue } },
-    //   "*"
-    // );
+
     const file = fileInput.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = function (event) {
         const arrayBuffer = event.target.result;
+        console.log(arrayBuffer);
         parent.postMessage(
           {
             pluginMessage: {
@@ -82,6 +73,17 @@
         );
       };
       reader.readAsArrayBuffer(file);
+    } else {
+       parent.postMessage(
+          {
+            pluginMessage: {
+              type: "replace-all",
+              newText,
+              instanceValue,
+            },
+          },
+          "*"
+        );
     }
     // const imageName = document.getElementById("imageName").value;
     // const newImageUrl = document.getElementById("newImageUrl").value;
@@ -99,28 +101,4 @@
   //       "*"
   //     );
   //   };
-
-  //   fileInput.addEventListener("change", function () {
-  //     uploadButton.disabled = !fileInput.files.length;
-  //   });
-
-  // uploadButton.addEventListener("click", function () {
-  //   const file = fileInput.files[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = function (event) {
-  //       const arrayBuffer = event.target.result;
-  //       parent.postMessage(
-  //         {
-  //           pluginMessage: {
-  //             type: "upload-image",
-  //             imageBytes: new Uint8Array(arrayBuffer),
-  //           },
-  //         },
-  //         "*"
-  //       );
-  //     };
-  //     reader.readAsArrayBuffer(file);
-  //   }
-  // });
 </script>
