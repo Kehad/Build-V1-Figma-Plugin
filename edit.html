@@ -55,7 +55,8 @@
     }
   });
 
-  replaceEl.onclick = () => {
+//   replaceEl.onclick = () => {
+  uploadButton.onclick = () => {
     const instanceValue = document.getElementById("instanceValue").value;
     const newText = document.getElementById("newText").value;
     console.log(newText);
@@ -64,22 +65,22 @@
       { pluginMessage: { type: "replace-text", newText, instanceValue } },
       "*"
     );
-    const imageName = document.getElementById("imageName").value;
-    const newImageUrl = document.getElementById("newImageUrl").value;
-    parent.postMessage(
-      { pluginMessage: { type: "replace-image", imageName, newImageUrl } },
-      "*"
-    );
+    // const imageName = document.getElementById("imageName").value;
+    // const newImageUrl = document.getElementById("newImageUrl").value;
+    // parent.postMessage(
+    //   { pluginMessage: { type: "replace-image", imageName, newImageUrl } },
+    //   "*"
+    // );
   };
 
-  document.getElementById("upload-button").onclick = () => {
-    const imageName = document.getElementById("imageName").value;
-    const newImageUrl = document.getElementById("newImageUrl").value;
-    parent.postMessage(
-      { pluginMessage: { type: "replace-image", imageName, newImageUrl } },
-      "*"
-    );
-  };
+//   document.getElementById("upload-button").onclick = () => {
+//     const imageName = document.getElementById("imageName").value;
+//     const newImageUrl = document.getElementById("newImageUrl").value;
+//     parent.postMessage(
+//       { pluginMessage: { type: "replace-image", imageName, newImageUrl } },
+//       "*"
+//     );
+//   };
 
   //   fileInput.addEventListener("change", function () {
   //     uploadButton.disabled = !fileInput.files.length;
@@ -105,3 +106,4 @@
     }
   });
 </script>
+ 
