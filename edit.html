@@ -2,11 +2,14 @@
 <h3>Replace Text</h3>
 <input id="instanceValue" type="number" placeholder="No of instance" />
 <input id="newText" placeholder="New text" />
-<button id="replaceBtn">Replace</button>
-<input type="checkbox" id="imagecheck" />
-<label for="imagecheck">Image Check</label>
+<div>
+  <input type="checkbox" id="imagecheck" />
+  <label for="imagecheck">Image Check</label>
+</div>
 <h3>Replace Image</h3>
-<input type="file" id="file-input" accept="image/*" disabled />
+<div>
+  <input type="file" id="file-input" accept="image/*" disabled />
+</div>
 <!-- <input id="imageName" placeholder="Image name to replace" /> -->
 <!-- <input id="newImageUrl" placeholder="New image URL" /> -->
 <button id="upload-button">Upload</button>
@@ -14,7 +17,7 @@
 <script>
   const checkBox = document.getElementById("imagecheck");
   const fileInput = document.getElementById("file-input");
-  const replaceEl = document.getElementById("replaceBtn");
+
   const uploadButton = document.getElementById("upload-button");
 
   checkBox.addEventListener("change", function () {
@@ -47,7 +50,6 @@
     }
   });
 
-  //   replaceEl.onclick = () => {
   uploadButton.onclick = () => {
     const instanceValue = document.getElementById("instanceValue").value;
     const newText = document.getElementById("newText").value;
