@@ -9,7 +9,7 @@
       />
 
     </div>
-    <div>
+    <div class="duplicate_box">
       <h5 class="duplicate">Select the number of component you want to duplicate</h5>
       <input type="number" placeholder="1"  min="1" max="100" step="1" id="instanceValue">
     </div>
@@ -34,21 +34,24 @@
 </div>
 <!-- <input id="imageName" placeholder="Image name to replace" /> -->
 <!-- <input id="newImageUrl" placeholder="New image URL" /> -->
-<button id="upload-button">Upload</button> -->
+<!-- <button id="upload-button">Upload</button> --> 
 
 <style>
   body {
     background-color: #333333;
     color: #fff;
     margin: 30px 0;
-    width: 280px;
     
   }
   .box {
     display: flex;
+    width: 280px;
     flex-direction: column;
     align-items: center;
-
+    margin: 0 auto;
+  }
+  .duplicate_box {
+    margin-button: 20px;
   }
   .duplicate {
     font-size: 10px;
