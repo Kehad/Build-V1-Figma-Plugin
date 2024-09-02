@@ -1,5 +1,6 @@
 "use strict";
 figma.showUI(__html__);
+figma.ui.resize(400, 500);
 figma.ui.onmessage = async (msg) => {
     if (msg.type === "replace-all") {
         await replaceText(msg.newText, msg.instanceValue, msg.imageBytes);
@@ -106,6 +107,9 @@ async function replaceText(newText, instanceValue, imageBytes) {
             }
         });
     }
+}
+function showUI(arg0) {
+    throw new Error("Function not implemented.");
 }
 // REPLACE IMAGE
 // async function replaceImage(imageBytes: Uint8Array) {

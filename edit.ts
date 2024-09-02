@@ -1,5 +1,8 @@
 figma.showUI(__html__);
 
+figma.ui.resize(400, 500);
+
+
 figma.ui.onmessage = async (msg) => {
   if (msg.type === "replace-all") {
     await replaceText(msg.newText, msg.instanceValue, msg.imageBytes);
@@ -140,6 +143,10 @@ async function replaceText(
   }
 }
 
+
+function showUI(arg0: { width: number; height: number; }) {
+  throw new Error("Function not implemented.");
+}
 // REPLACE IMAGE
 // async function replaceImage(imageBytes: Uint8Array) {
 //   const selection = figma.currentPage.selection;
