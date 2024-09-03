@@ -1,6 +1,12 @@
 "use strict";
 figma.showUI(__html__);
-figma.ui.resize(400, 500);
+// figma.showUI(__html__, {
+//   width: 400,
+//   height: 300,
+//   title: 'Componento',  // Hides the header with the close button
+//   themeColors: false  // Uses your custom background (no default header)
+// });
+figma.ui.resize(350, 500);
 figma.ui.onmessage = async (msg) => {
     if (msg.type === "replace-all") {
         await replaceText(msg.newText, msg.instanceValue, msg.imageBytes);
