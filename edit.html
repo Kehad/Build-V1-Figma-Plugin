@@ -1,6 +1,6 @@
 <html>
   <div class="box">
-    <div class="logo_box">
+    <div class="logo__box">
       <svg
         width="100"
         height="70"
@@ -86,8 +86,8 @@
         />
       </svg>
     </div>
-    <div class="content_box">
-      <div class="duplicate_box">
+    <!-- <div class="content__box">
+      <div class="duplicate__box">
         <h5 class="duplicate">
           Select the number of component you want to duplicate
         </h5>
@@ -100,7 +100,7 @@
           id="instanceValue"
         />
       </div>
-      <div class="file_box">
+      <div class="file__box">
         <svg
           width="40"
           height="40"
@@ -114,12 +114,33 @@
           />
         </svg>
       </div>
-      <p class="file_label">
+      <p class="file__label">
         Click Add to select component you want to duplicate
       </p>
+    </div> -->
+
+    <div class="analyze__box">
+      <div class="analyze__container">
+        <img src="/assets/Component 1.png" alt="Component" />
+      </div>
+      <p class="analyze__label">Analyzing the element in the component</p>
     </div>
-    <div class="button_box">
-      <button class="button_next">Next</button>
+
+    <div class="prompt__box">
+      <div class="prompt__innerbox">
+        <div class="prompt__container">
+          <p class="prompt__label">Click to enter prompt to replace</p>
+          <input type="text" placeholder="Image" id="prompt__input" />
+        </div>
+        <div class="prompt__container">
+          <p class="prompt__label">Click to enter prompt to replace</p>
+          <input type="text" placeholder="Text" id="prompt__input" />
+        </div>
+      </div>
+    </div>
+
+    <div class="button__box">
+      <button class="button__next">Next</button>
     </div>
   </div>
 </html>
@@ -160,10 +181,10 @@
     height: 500px;
     justify-content: space-between;
   }
-  .logo_box {
+  .logo__box {
     /* margin-bottom: 5rem; */
   }
-  .duplicate_box {
+  .duplicate__box {
     margin-bottom: 40px;
   }
   .duplicate {
@@ -190,7 +211,7 @@
   #instanceValue::placeholder {
     color: #fff;
   }
-  .file_box {
+  .file__box {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -210,7 +231,7 @@
       )
       1;
   }
-  .file_label {
+  .file__label {
     font-size: 10px;
     font-weight: normal;
     font-weight: 400;
@@ -218,7 +239,7 @@
     margin-bottom: 5rem;
     margin-top: 5px;
   }
-  .button_box {
+  .button__box {
     align-self: flex-end;
     /* align-items: flex-end; */
     /* justify-content: flex-end; */
@@ -237,7 +258,7 @@
     padding-right: 3rem;
     margin-bottom: 2rem;
   }
-  .button_next {
+  .button__next {
     background-color: #b2db11;
     color: #000;
     padding: 10px 25px;
@@ -246,6 +267,60 @@
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
+  }
+
+  /* ------------------------------------------------------------------------------------- */
+  /* ------------- ANALYZE --------------------------- */
+  /* ------------------------------------------------------------------------------------- */
+  .analyze__container {
+    width: 250px;
+    height: 130px;
+    background-color: #454545;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .prompt__innerbox {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .analyze__label {
+    color: #b2db11;
+    /* font-family: K2D; */
+    font-size: 10px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: normal;
+    text-align: center;
+    margin-top: 5px;
+  }
+  #prompt__input {
+    width: 100%;
+    width: 250px;
+
+    background: #6e6e6e;
+    height: 30px;
+    outline: none;
+    /* border: 0.1px solid #888585; */
+    border: hidden;
+    border-radius: 5px;
+    padding: 0px 10px;
+    color: #fff;
+  }
+  #prompt__input::placeholder {
+    color: #fff;
+  }
+  .prompt__label {
+    color: #FFF;
+font-family: Jura;
+font-size: 10px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+margin-left: 5px;
+margin-bottom: 1px;
   }
 </style>
 
