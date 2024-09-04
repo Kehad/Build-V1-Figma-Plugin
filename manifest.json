@@ -9,7 +9,7 @@
   "editorType": ["figma"],
   "ui": "edit.html",
   "networkAccess": {
-    "allowedDomains": ["none"]
+    "allowedDomains": ["https://fonts.googleapis.com", "https://fonts.gstatic.com"]
   }
 
 }

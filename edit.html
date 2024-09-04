@@ -1,4 +1,6 @@
 <html>
+    <div class="backdrop hidden" id="backdrop"></div>
+
   <div class="box">
     <div class="logo__box">
       <svg
@@ -86,7 +88,7 @@
         />
       </svg>
     </div>
-    <!-- <div class="content__box">
+    <div class="content__box">
       <div class="duplicate__box">
         <h5 class="duplicate">
           Select the number of component you want to duplicate
@@ -117,17 +119,17 @@
       <p class="file__label">
         Click Add to select component you want to duplicate
       </p>
-    </div> -->
+    </div>
 
-    <!-- <div class="analyze__box">
+    <div class="analyze__box hidden">
       <div class="analyze__container">
          <object type="image/svg+xml" data="./assets/Component 1.svg"></object>
       </div>
-      <p class="analyze__label">Analyzing completed</p>
-    </div> -->
-    <!-- <p class="analyze__label">Analyzing the element in the component</p> -->
+      <p class="analyze__label analyzing">Analyzing the element in the component</p>
+      <p class="analyze__label analyzed hidden">Analyzing completed</p>
+    </div>
 
-    <!-- <div class="prompt__box">
+    <div class="prompt__box hidden">
       <div class="prompt__innerbox">
         <div class="prompt__container">
           <p class="prompt__label">Click to enter prompt to replace</p>
@@ -138,17 +140,28 @@
           <input type="text" placeholder="Text" id="prompt__input" />
         </div>
       </div>
-    </div> -->
+    </div>
 
-    <div class="generate__prompt"></div>
-    
+
+    <div class="generate__prompt hidden">
+      <div class="generate__box">
+        <input
+          type="text"
+          class="generate__text"
+          placeholder="Enter Prompt here"
+        />
+      </div>
+      <div class="generate__buttondiv">
+        <button class="generate__button">Generate</button>
+      </div>
+    </div>
 
     <div class="button__box">
-      <button class="button__next">Next</button>
+      <button class="button__next" id="button__next">Next</button>
     </div>
   </div>
 </html>
-<!-- <input id="instanceValue" type="n  umber" placeholder="No of instance" />
+<!-- <input id="instanceValue" type="number" placeholder="No of instance" />
 <input id="newText" placeholder="New text" />
 <div>
   <input type="checkbox" id="imagecheck" />
@@ -158,9 +171,104 @@
 <div>
   <input type="file" id="file-input" accept="image/*" disabled />
 </div>
-<!-- <input id="imageName" placeholder="Image name to replace" /> -->
+<button id="upload-button">Upload</button>
+ <input id="imageName" placeholder="Image name to replace" /> -->
 <!-- <input id="newImageUrl" placeholder="New image URL" /> -->
-<!-- <button id="upload-button">Upload</button> -->
+
+<script>
+  // const checkBox = document.getElementById("imagecheck");
+  // const fileInput = document.getElementById("file-input");
+  // const uploadButton = document.getElementById("upload-button");
+  // checkBox.addEventListener("change", function () {
+  //   const selectedValue = checkBox.checked;
+
+  //   console.log(selectedValue);
+
+  //   if (selectedValue) {
+  //     fileInput.disabled = false; // Enable the button if a value is selected
+  //     uploadButton.disabled = true;
+
+  //     if (fileInput.files.length > 0) {
+  //       uploadButton.disabled = false; // Enable the upload button
+  //     }
+  //   } else {
+  //     fileInput.disabled = true; // Disable the button if no value is selected
+  //     uploadButton.disabled = false;
+  //   }
+  //   console.log(fileInput.files.length);
+  // });
+  // fileInput.addEventListener("change", function () {
+  //   if (fileInput.files.length > 0) {
+  //     // A file is selected
+
+  //     uploadButton.disabled = false; // Enable the upload button
+  //     //     uploadButton.disabled = !fileInput.files.length;
+  //   } else {
+  //     // No file is selected
+  //     uploadButton.disabled = true; // Disable the upload button
+  //   }
+  // });
+  // uploadButton.onclick = () => {
+  //   const instanceValue = document.getElementById("instanceValue").value;
+  //   const newText = document.getElementById("newText").value;
+  //   console.log(newText);
+  //   console.log("html");
+
+  //   const file = fileInput.files[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = function (event) {
+  //       const arrayBuffer = event.target.result;
+  //       console.log(arrayBuffer);
+  //       parent.postMessage(
+  //         {
+  //           pluginMessage: {
+  //             type: "replace-all",
+  //             imageBytes: new Uint8Array(arrayBuffer),
+  //             newText,
+  //             instanceValue,
+  //           },
+  //         },
+  //         "*"
+  //       );
+  //     };
+  //     reader.readAsArrayBuffer(file);
+  //   } else {
+  //     parent.postMessage(
+  //       {
+  //         pluginMessage: {
+  //           type: "replace-all",
+  //           newText,
+  //           instanceValue,
+  //         },
+  //       },
+  //       "*"
+  //     );
+  //   }
+  //   // const imageName = document.getElementById("imageName").value;
+  //   // const newImageUrl = document.getElementById("newImageUrl").value;
+  //   // parent.postMessage(
+  //   //   { pluginMessage: { type: "replace-image", imageName, newImageUrl } },
+  //   //   "*"
+  //   // );
+  // };
+  
+
+
+  const contentBox = document.querySelector(".content__box");
+  const buttonNext = document.getElementById("button__next");
+  const analyzeBox = document.querySelector(".analyze__box");
+
+
+  buttonNext.addEventListener('click', function () {
+    console.log("Button next clicked");
+    contentBox.classList.add("hidden");
+    analyzeBox.classList.remove("hidden"); 
+
+    if (!contentBox.classList.contains("hidden")) {
+  });
+  
+</script>
 
 <style>
   @import url("https://fonts.googleapis.com/css2?family=Jura:wght@300..700&display=swap");
@@ -175,6 +283,12 @@
     font-family: "Jura", sans-serif;
     /* margin: 30px 0; */
   }
+  .hidden {
+    display: none;
+  }
+
+
+
   .box {
     display: flex;
     /* width: 280px; */
@@ -184,6 +298,7 @@
     /* margin: 0 auto; */
     height: 500px;
     justify-content: space-between;
+    z-index: 100;
   }
   .logo__box {
     /* margin-bottom: 5rem; */
@@ -259,7 +374,7 @@
     /* justify-content: right; */
     /* margin-top: auto; */
     /* margin-top: 5rem; */
-    padding-right: 3rem;
+    margin-right: 3rem;
     margin-bottom: 2rem;
   }
   .button__next {
@@ -300,6 +415,11 @@
     text-align: center;
     margin-top: 5px;
   }
+
+  /* ------------------------------------------------------------------------------------- */
+  /* ------------- PROMPT --------------------------- */
+  /* ------------------------------------------------------------------------------------- */
+
   #prompt__input {
     width: 100%;
     width: 250px;
@@ -317,104 +437,78 @@
     color: #fff;
   }
   .prompt__label {
-    color: #FFF;
-font-family: Jura;
-font-size: 10px;
-font-style: normal;
-font-weight: 400;
-line-height: normal;
-margin-left: 5px;
-margin-bottom: 1px;
+    color: #fff;
+    font-family: Jura;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin-left: 5px;
+    margin-bottom: 1px;
+  }
+
+  /* ------------------------------------------------------------------------------------- */
+  /* ------------- GENERATE --------------------------- */
+  /* ------------------------------------------------------------------------------------- */
+  .backdrop {
+    width: 350px;
+    height: 500px;
+    background-color: #252323;
+    /* background-color: red; */
+    position: fixed;
+    opacity: 0.5;
+    z-index: -1;
+  }
+  .generate__prompt {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap: 35px;
+  }
+  .hidden {
+    display: none;
+  }
+  .generate__box {
+    background-color: #454545;
+    width: 250px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    z-index: 1;
+  }
+  .generate__text {
+    background: transparent;
+    border: none;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #fff;
+    width: 80%;
+    color: #fff;
+  }
+  .generate__text::placeholder {
+    color: #fff;
+  }
+   .generate__text:focus {
+    outline: none;
+  }
+  .generate__buttondiv {
+    display: flex;
+    align-self: flex-end;
+    justify-content: flex-end;
+    z-index: 1;
+  }
+  .generate__button {
+    background-color: #b2db11;
+    color: #000;
+    font-weight: 600;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+    display: flex;
+    justify-content: flex-end;
   }
 </style>
 
-<script>
-  const checkBox = document.getElementById("imagecheck");
-  const fileInput = document.getElementById("file-input");
 
-  const uploadButton = document.getElementById("upload-button");
-
-  checkBox.addEventListener("change", function () {
-    const selectedValue = checkBox.checked;
-
-    console.log(selectedValue);
-
-    if (selectedValue) {
-      fileInput.disabled = false; // Enable the button if a value is selected
-      uploadButton.disabled = true;
-
-      if (fileInput.files.length > 0) {
-        uploadButton.disabled = false; // Enable the upload button
-      }
-    } else {
-      fileInput.disabled = true; // Disable the button if no value is selected
-      uploadButton.disabled = false;
-    }
-    console.log(fileInput.files.length);
-  });
-  fileInput.addEventListener("change", function () {
-    if (fileInput.files.length > 0) {
-      // A file is selected
-
-      uploadButton.disabled = false; // Enable the upload button
-      //     uploadButton.disabled = !fileInput.files.length;
-    } else {
-      // No file is selected
-      uploadButton.disabled = true; // Disable the upload button
-    }
-  });
-
-  uploadButton.onclick = () => {
-    const instanceValue = document.getElementById("instanceValue").value;
-    const newText = document.getElementById("newText").value;
-    console.log(newText);
-    console.log("html");
-
-    const file = fileInput.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (event) {
-        const arrayBuffer = event.target.result;
-        console.log(arrayBuffer);
-        parent.postMessage(
-          {
-            pluginMessage: {
-              type: "replace-all",
-              imageBytes: new Uint8Array(arrayBuffer),
-              newText,
-              instanceValue,
-            },
-          },
-          "*"
-        );
-      };
-      reader.readAsArrayBuffer(file);
-    } else {
-      parent.postMessage(
-        {
-          pluginMessage: {
-            type: "replace-all",
-            newText,
-            instanceValue,
-          },
-        },
-        "*"
-      );
-    }
-    // const imageName = document.getElementById("imageName").value;
-    // const newImageUrl = document.getElementById("newImageUrl").value;
-    // parent.postMessage(
-    //   { pluginMessage: { type: "replace-image", imageName, newImageUrl } },
-    //   "*"
-    // );
-  };
-
-  //   document.getElementById("upload-button").onclick = () => {
-  //     const imageName = document.getElementById("imageName").value;
-  //     const newImageUrl = document.getElementById("newImageUrl").value;
-  //     parent.postMessage(
-  //       { pluginMessage: { type: "replace-image", imageName, newImageUrl } },
-  //       "*"
-  //     );
-  //   };
-</script>
