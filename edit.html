@@ -1,9 +1,9 @@
 <html>
-    <div class="backdrop hidden" id="backdrop"></div>
+    <div class="main backdrop hidden" id="backdrop"></div>
 
   <div class="box">
     <div class="logo__box">
-      <svg
+      <!-- <svg
         width="100"
         height="70"
         viewBox="0 0 306 48"
@@ -86,7 +86,7 @@
           rx="3"
           fill="white"
         />
-      </svg>
+      </svg> -->
     </div>
     <div class="content__box">
       <div class="duplicate__box">
@@ -124,6 +124,8 @@
     <div class="analyze__box hidden">
       <div class="analyze__container">
          <object type="image/svg+xml" data="./assets/Component 1.svg"></object>
+      <img src="./assets/Component 1@2x.jpg" alt="Image"/>
+
       </div>
       <p class="analyze__label analyzing">Analyzing the element in the component</p>
       <p class="analyze__label analyzed hidden">Analyzing completed</p>
@@ -262,6 +264,7 @@
   const analyzing = document.querySelector(".analyzing");
   const analyzed = document.querySelector(".analyzed");
   const generateBox = document.querySelector(".generate__box");
+  const backdrop = document.querySelector(".backdrop");
 
 
   buttonNext.addEventListener('click', function () {
@@ -302,6 +305,7 @@
 
     if (!analyzeBoxState && !promptBoxState && generateBoxState) {
       generateBox.classList.remove("hidden");
+      backdrop.classList.remove("hidden");
     }
   });
   
@@ -475,7 +479,6 @@
   }
   .prompt__label {
     color: #fff;
-    font-family: Jura;
     font-size: 10px;
     font-style: normal;
     font-weight: 400;
@@ -491,17 +494,24 @@
     width: 350px;
     height: 500px;
     background-color: #252323;
-    /* background-color: red; */
-    position: fixed;
-    opacity: 0.5;
+    opacity: 0.9;
     /* z-index: -1; */
+  }
+  .main {
+    position: fixed;
+    top: 0;
+    left: 0;
   }
   .generate__box {
     display: flex;
     align-items: center;
     flex-direction: column;
-    justify-content: center;
+    /* justify-content: center; */
     gap: 35px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   .hidden {
     display: none;
