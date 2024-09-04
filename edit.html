@@ -143,8 +143,8 @@
     </div>
 
 
-    <div class="generate__prompt hidden">
-      <div class="generate__box">
+    <div class="generate__box hidden">
+      <div class="generate__prompt">
         <input
           type="text"
           class="generate__text"
@@ -258,14 +258,51 @@
   const contentBox = document.querySelector(".content__box");
   const buttonNext = document.getElementById("button__next");
   const analyzeBox = document.querySelector(".analyze__box");
+  const promptBox = document.querySelector(".prompt__box");
+  const analyzing = document.querySelector(".analyzing");
+  const analyzed = document.querySelector(".analyzed");
+  const generateBox = document.querySelector(".generate__box");
 
 
   buttonNext.addEventListener('click', function () {
     console.log("Button next clicked");
-    contentBox.classList.add("hidden");
-    analyzeBox.classList.remove("hidden"); 
+    const contentBoxState = contentBox.classList.contains("hidden");
+    const analyzeBoxState = analyzeBox.classList.contains("hidden");
+    const promptBoxState = promptBox.classList.contains("hidden");
+    const generateBoxState = generateBox.classList.contains("hidden");
+    
+    // if (!contentBox.classList.contains("hidden") && analyzeBox.classList.contains("hidden")) {
+    //   console.log("Hide content box");
+    //   contentBox.classList.add("hidden");
+    //   analyzeBox.classList.remove("hidden");
+    //   console.log("show analysis box");
+    // }
 
-    if (!contentBox.classList.contains("hidden")) {
+    // if (!analyzeBox.classList.contains("hidden")) {
+    //   // analyzeBox.classList.add("hidden");
+    //   analyzeBox.classList.remove("hidden");
+      
+    // }
+    
+    // if (!analyzeBox.classList.contains("hidden") && promptBox.classList.contains("hidden")) {
+    //   promptBox.classList.remove("hidden");
+    // }
+    
+    if (!contentBoxState && analyzeBoxState) {
+      contentBox.classList.add("hidden");
+      analyzeBox.classList.remove("hidden");
+      
+    }
+
+    if(!analyzeBoxState && promptBoxState) {
+      promptBox.classList.remove("hidden");
+      analyzing.classList.add("hidden");
+      analyzed.classList.remove("hidden");
+    }
+
+    if (!analyzeBoxState && !promptBoxState && generateBoxState) {
+      generateBox.classList.remove("hidden");
+    }
   });
   
 </script>
@@ -457,9 +494,9 @@
     /* background-color: red; */
     position: fixed;
     opacity: 0.5;
-    z-index: -1;
+    /* z-index: -1; */
   }
-  .generate__prompt {
+  .generate__box {
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -469,7 +506,7 @@
   .hidden {
     display: none;
   }
-  .generate__box {
+  .generate__prompt {
     background-color: #454545;
     width: 250px;
     height: 70px;
