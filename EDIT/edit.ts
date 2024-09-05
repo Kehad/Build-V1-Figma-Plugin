@@ -1,6 +1,5 @@
 figma.showUI(__html__);
 
-
 // figma.showUI(__html__, {
 //   width: 400,
 //   height: 300,
@@ -9,7 +8,6 @@ figma.showUI(__html__);
 // });
 
 figma.ui.resize(350, 500);
-
 
 figma.ui.onmessage = async (msg) => {
   if (msg.type === "replace-all") {
@@ -109,7 +107,7 @@ async function modifyImageNode(imageNode: SceneNode, imageBytes: Uint8Array) {
   }
 }
 
-/// REPLACE TEST
+// / REPLACE TEST
 async function replaceText(
   newText: string,
   instanceValue: number,
@@ -150,45 +148,4 @@ async function replaceText(
     });
   }
 }
-
-
-function showUI(arg0: { width: number; height: number; }) {
-  throw new Error("Function not implemented.");
-}
-// REPLACE IMAGE
-// async function replaceImage(imageBytes: Uint8Array) {
-//   const selection = figma.currentPage.selection;
-//   if (selection.length === 0) {
-//     figma.notify("No nodes selected!");
-//   } else {
-//     selection.forEach(async (node) => {
-//       if (node && (node.type === "COMPONENT" || node.type === "INSTANCE")) {
-//         figma.notify("A component is selected!");
-//         const componentId = node.id;
-//         for (let i = 0; i < 5; i++) {
-//           const newInstance = await createComponentInstance(
-//             componentId,
-//             100,
-//             100
-//           );
-//           if (newInstance) {
-//             inspectComponent(newInstance); // If you want to inspect the newly created instance
-//           }
-//           newInstance?.children.forEach(async (child, index) => {
-//             console.log(
-//               `Child ${index + 1}: ${child.name} (Type: ${child.type})`
-//             );
-
-//               if (child.type === "RECTANGLE") {
-//                 console.log(`12rectangle child ${child} ${imageBytes}`);
-//                 console.log(child, imageBytes);
-//               await modifyImageNode(child, imageBytes);
-//             }
-//           });
-//         }
-//       } else {
-//         figma.notify("Please select a component or instance.");
-//       }
-//     });
-//   }
-// }
+/* ------------------------------------------------------------------------------------- */

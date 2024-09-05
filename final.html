@@ -1,9 +1,9 @@
 <html>
-    <div class="main backdrop hidden" id="backdrop"></div>
+  <div class="main backdrop hidden" id="backdrop"></div>
 
   <div class="box">
     <div class="logo__box">
-      <!-- <svg
+      <svg
         width="100"
         height="70"
         viewBox="0 0 306 48"
@@ -86,7 +86,7 @@
           rx="3"
           fill="white"
         />
-      </svg> -->
+      </svg>
     </div>
     <div class="content__box">
       <div class="duplicate__box">
@@ -123,11 +123,15 @@
 
     <div class="analyze__box hidden">
       <div class="analyze__container">
-         <object type="image/svg+xml" data="./assets/Component 1.svg"></object>
-      <img src="./assets/Component 1@2x.jpg" alt="Image"/>
-
+        <img
+          src="https://fastly.picsum.photos/id/700/300/200.jpg?hmac=m1e33dS9utoexMK9Dg6Wyz-l3HyFDhUD2hCGXZDVGn4"
+          alt="Image"
+          class="analyze__image"
+        />
       </div>
-      <p class="analyze__label analyzing">Analyzing the element in the component</p>
+      <p class="analyze__label analyzing">
+        Analyzing the element in the component
+      </p>
       <p class="analyze__label analyzed hidden">Analyzing completed</p>
     </div>
 
@@ -143,7 +147,6 @@
         </div>
       </div>
     </div>
-
 
     <div class="generate__box hidden">
       <div class="generate__prompt">
@@ -162,101 +165,48 @@
       <button class="button__next" id="button__next">Next</button>
     </div>
   </div>
-</html>
-<!-- <input id="instanceValue" type="number" placeholder="No of instance" />
-<input id="newText" placeholder="New text" />
-<div>
-  <input type="checkbox" id="imagecheck" />
-  <label for="imagecheck">Image Check</label>
-</div>
-<h3>Replace Image</h3>
-<div>
-  <input type="file" id="file-input" accept="image/*" disabled />
-</div>
-<button id="upload-button">Upload</button>
- <input id="imageName" placeholder="Image name to replace" /> -->
-<!-- <input id="newImageUrl" placeholder="New image URL" /> -->
+
+  <select id="component-select">
+  <option value="" disabled selected>Select a component</option>
+</select>
+
+<button id="add-component">Add Component</button>
 
 <script>
-  // const checkBox = document.getElementById("imagecheck");
-  // const fileInput = document.getElementById("file-input");
-  // const uploadButton = document.getElementById("upload-button");
-  // checkBox.addEventListener("change", function () {
-  //   const selectedValue = checkBox.checked;
+  // Listen for messages from the Figma code
+  window.onmessage = (event) => {
+    const { type, components } = event.data.pluginMessage;
+    
+    if (type === 'componentList') {
+      const selectElement = document.getElementById('component-select');
+      
+      // Populate dropdown with component names
+      components.forEach(component => {
+        const option = document.createElement('option');
+        option.value = component.id;
+        option.text = component.name;
+        selectElement.add(option);
+      });
+    }
+  };
 
-  //   console.log(selectedValue);
-
-  //   if (selectedValue) {
-  //     fileInput.disabled = false; // Enable the button if a value is selected
-  //     uploadButton.disabled = true;
-
-  //     if (fileInput.files.length > 0) {
-  //       uploadButton.disabled = false; // Enable the upload button
-  //     }
-  //   } else {
-  //     fileInput.disabled = true; // Disable the button if no value is selected
-  //     uploadButton.disabled = false;
-  //   }
-  //   console.log(fileInput.files.length);
-  // });
-  // fileInput.addEventListener("change", function () {
-  //   if (fileInput.files.length > 0) {
-  //     // A file is selected
-
-  //     uploadButton.disabled = false; // Enable the upload button
-  //     //     uploadButton.disabled = !fileInput.files.length;
-  //   } else {
-  //     // No file is selected
-  //     uploadButton.disabled = true; // Disable the upload button
-  //   }
-  // });
-  // uploadButton.onclick = () => {
-  //   const instanceValue = document.getElementById("instanceValue").value;
-  //   const newText = document.getElementById("newText").value;
-  //   console.log(newText);
-  //   console.log("html");
-
-  //   const file = fileInput.files[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = function (event) {
-  //       const arrayBuffer = event.target.result;
-  //       console.log(arrayBuffer);
-  //       parent.postMessage(
-  //         {
-  //           pluginMessage: {
-  //             type: "replace-all",
-  //             imageBytes: new Uint8Array(arrayBuffer),
-  //             newText,
-  //             instanceValue,
-  //           },
-  //         },
-  //         "*"
-  //       );
-  //     };
-  //     reader.readAsArrayBuffer(file);
-  //   } else {
-  //     parent.postMessage(
-  //       {
-  //         pluginMessage: {
-  //           type: "replace-all",
-  //           newText,
-  //           instanceValue,
-  //         },
-  //       },
-  //       "*"
-  //     );
-  //   }
-  //   // const imageName = document.getElementById("imageName").value;
-  //   // const newImageUrl = document.getElementById("newImageUrl").value;
-  //   // parent.postMessage(
-  //   //   { pluginMessage: { type: "replace-image", imageName, newImageUrl } },
-  //   //   "*"
-  //   // );
-  // };
+  const addButton = document.getElementById('add-component');
   
+  addButton.addEventListener('click', () => {
+    const selectElement = document.getElementById('component-select');
+    const selectedComponentId = selectElement.value;
+
+    if (selectedComponentId) {
+      // Send selected component ID to Figma to insert
+      parent.postMessage({ pluginMessage: { type: 'insertComponent', id: selectedComponentId } }, '*');
+    }
+  });
+</script>
+
+</html>
 
 
+<script>
   const contentBox = document.querySelector(".content__box");
   const buttonNext = document.getElementById("button__next");
   const analyzeBox = document.querySelector(".analyze__box");
@@ -266,38 +216,19 @@
   const generateBox = document.querySelector(".generate__box");
   const backdrop = document.querySelector(".backdrop");
 
-
-  buttonNext.addEventListener('click', function () {
+  buttonNext.addEventListener("click", function () {
     console.log("Button next clicked");
     const contentBoxState = contentBox.classList.contains("hidden");
     const analyzeBoxState = analyzeBox.classList.contains("hidden");
     const promptBoxState = promptBox.classList.contains("hidden");
     const generateBoxState = generateBox.classList.contains("hidden");
-    
-    // if (!contentBox.classList.contains("hidden") && analyzeBox.classList.contains("hidden")) {
-    //   console.log("Hide content box");
-    //   contentBox.classList.add("hidden");
-    //   analyzeBox.classList.remove("hidden");
-    //   console.log("show analysis box");
-    // }
 
-    // if (!analyzeBox.classList.contains("hidden")) {
-    //   // analyzeBox.classList.add("hidden");
-    //   analyzeBox.classList.remove("hidden");
-      
-    // }
-    
-    // if (!analyzeBox.classList.contains("hidden") && promptBox.classList.contains("hidden")) {
-    //   promptBox.classList.remove("hidden");
-    // }
-    
     if (!contentBoxState && analyzeBoxState) {
       contentBox.classList.add("hidden");
       analyzeBox.classList.remove("hidden");
-      
     }
 
-    if(!analyzeBoxState && promptBoxState) {
+    if (!analyzeBoxState && promptBoxState) {
       promptBox.classList.remove("hidden");
       analyzing.classList.add("hidden");
       analyzed.classList.remove("hidden");
@@ -308,8 +239,10 @@
       backdrop.classList.remove("hidden");
     }
   });
-  
+
+
 </script>
+
 
 <style>
   @import url("https://fonts.googleapis.com/css2?family=Jura:wght@300..700&display=swap");
@@ -327,8 +260,6 @@
   .hidden {
     display: none;
   }
-
-
 
   .box {
     display: flex;
@@ -369,7 +300,7 @@
     color: #fff;
   }
   #instanceValue::placeholder {
-    color: #fff;
+    color: #b9b0b0;
   }
   .file__box {
     display: flex;
@@ -401,20 +332,6 @@
   }
   .button__box {
     align-self: flex-end;
-    /* align-items: flex-end; */
-    /* justify-content: flex-end; */
-    /* justify-self: flex-end; */
-    /* justify-items: flex-end; */
-    /* justify-items:stretch; */
-    /* background-color: #000; */
-    /* flex: 1; */
-    /* margin-top: 90px; */
-    /* width: 100%; */
-    /* display: flex; */
-    /* align-items: right; */
-    /* justify-content: right; */
-    /* margin-top: auto; */
-    /* margin-top: 5rem; */
     margin-right: 3rem;
     margin-bottom: 2rem;
   }
@@ -434,18 +351,19 @@
   /* ------------------------------------------------------------------------------------- */
   .analyze__container {
     width: 250px;
-    height: 130px;
+    height: 200px;
     background-color: #454545;
     border-radius: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .prompt__innerbox {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  .analyze__image {
+    width: 80%;
+    height: 80%;
+    object-fit: cover;
   }
+
   .analyze__label {
     color: #b2db11;
     /* font-family: K2D; */
@@ -485,6 +403,11 @@
     line-height: normal;
     margin-left: 5px;
     margin-bottom: 1px;
+  }
+  .prompt__innerbox {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
   /* ------------------------------------------------------------------------------------- */
@@ -537,7 +460,7 @@
   .generate__text::placeholder {
     color: #fff;
   }
-   .generate__text:focus {
+  .generate__text:focus {
     outline: none;
   }
   .generate__buttondiv {
@@ -557,5 +480,3 @@
     justify-content: flex-end;
   }
 </style>
-
-

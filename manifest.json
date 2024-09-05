@@ -2,14 +2,14 @@
   "name": "Build V1",
   "id": "1409965689605276765",
   "api": "1.0.0",
-  "main": "edit.js",
+  "main": "final.js",
   "capabilities": [],
   "enableProposedApi": false,
   "documentAccess": "dynamic-page",
   "editorType": ["figma"],
-  "ui": "edit.html",
+  "ui": "final.html",
   "networkAccess": {
-    "allowedDomains": ["https://fonts.googleapis.com", "https://fonts.gstatic.com"]
+    "allowedDomains": ["https://fonts.googleapis.com", "https://fonts.gstatic.com", "https://picsum.photos", "https://fastly.picsum.photos"]
   }
 
 }

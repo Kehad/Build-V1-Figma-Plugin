@@ -82,7 +82,7 @@ async function modifyImageNode(imageNode, imageBytes) {
         }
     }
 }
-/// REPLACE TEST
+// / REPLACE TEST
 async function replaceText(newText, instanceValue, imageBytes) {
     const selection = figma.currentPage.selection;
     if (selection.length === 0) {
@@ -114,42 +114,4 @@ async function replaceText(newText, instanceValue, imageBytes) {
         });
     }
 }
-function showUI(arg0) {
-    throw new Error("Function not implemented.");
-}
-// REPLACE IMAGE
-// async function replaceImage(imageBytes: Uint8Array) {
-//   const selection = figma.currentPage.selection;
-//   if (selection.length === 0) {
-//     figma.notify("No nodes selected!");
-//   } else {
-//     selection.forEach(async (node) => {
-//       if (node && (node.type === "COMPONENT" || node.type === "INSTANCE")) {
-//         figma.notify("A component is selected!");
-//         const componentId = node.id;
-//         for (let i = 0; i < 5; i++) {
-//           const newInstance = await createComponentInstance(
-//             componentId,
-//             100,
-//             100
-//           );
-//           if (newInstance) {
-//             inspectComponent(newInstance); // If you want to inspect the newly created instance
-//           }
-//           newInstance?.children.forEach(async (child, index) => {
-//             console.log(
-//               `Child ${index + 1}: ${child.name} (Type: ${child.type})`
-//             );
-//               if (child.type === "RECTANGLE") {
-//                 console.log(`12rectangle child ${child} ${imageBytes}`);
-//                 console.log(child, imageBytes);
-//               await modifyImageNode(child, imageBytes);
-//             }
-//           });
-//         }
-//       } else {
-//         figma.notify("Please select a component or instance.");
-//       }
-//     });
-//   }
-// }
+/* ------------------------------------------------------------------------------------- */
