@@ -2,18 +2,34 @@ figma.showUI(__html__);
 
 figma.ui.resize(350, 500);
 
+async function findComponentsWithCriteria() {
+  // Load all pages asynchronously
+  await figma.loadAllPagesAsync();
 
-const components = figma.root.findAllWithCriteria({
-  types: ["COMPONENT"],
+  // Now you can safely use findAllWithCriteria
+  const components = figma.currentPage.findAllWithCriteria({
+    types: ["INSTANCE", "FRAME"],
+  });
+
+  return components;
+}
+
+findComponentsWithCriteria().then((components) => {
+  console.log(components);
+  const componentList = components.map((component) => ({
+    name: component.name,
+    id: component.id,
+  }));
+  figma.ui.postMessage({ type: "componentList", components: componentList });
 });
 
-// Extract component names and ids to send to UI
-const componentList = components.map((component) => ({
-  name: component.name,
-  id: component.id,
-}));
 
-figma.ui.postMessage({ type: "componentList", components: componentList });
+// const components = figma.root.findAllWithCriteria({
+//   types: ["COMPONENT"],
+// });
+
+// Extract component names and ids to send to UI
+
 
 figma.ui.onmessage = async (message) => {
   if (message.type === "insertComponent") {
