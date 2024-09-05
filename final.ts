@@ -8,7 +8,8 @@ async function findComponentsWithCriteria() {
 
   // Now you can safely use findAllWithCriteria
   const components = figma.currentPage.findAllWithCriteria({
-    types: ["INSTANCE", "FRAME"],
+    // types: ["INSTANCE", "FRAME"],
+    types: ["COMPONENT"],
   });
 
   return components;
@@ -16,6 +17,7 @@ async function findComponentsWithCriteria() {
 
 findComponentsWithCriteria().then((components) => {
   console.log(components);
+  // Extract component names and ids to send to UI
   const componentList = components.map((component) => ({
     name: component.name,
     id: component.id,
@@ -28,7 +30,6 @@ findComponentsWithCriteria().then((components) => {
 //   types: ["COMPONENT"],
 // });
 
-// Extract component names and ids to send to UI
 
 
 figma.ui.onmessage = async (message) => {

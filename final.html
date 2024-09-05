@@ -167,44 +167,47 @@
   </div>
 
   <select id="component-select">
-  <option value="" disabled selected>Select a component</option>
-</select>
+    <option value="" disabled selected>Select a component</option>
+  </select>
 
-<button id="add-component">Add Component</button>
+  <button id="add-component">Add Component</button>
 
-<script>
-  // Listen for messages from the Figma code
-  window.onmessage = (event) => {
-    const { type, components } = event.data.pluginMessage;
-    
-    if (type === 'componentList') {
-      const selectElement = document.getElementById('component-select');
-      
-      // Populate dropdown with component names
-      components.forEach(component => {
-        const option = document.createElement('option');
-        option.value = component.id;
-        option.text = component.name;
-        selectElement.add(option);
-      });
-    }
-  };
+  <script>
+    // Listen for messages from the Figma code
+    window.onmessage = (event) => {
+      const { type, components } = event.data.pluginMessage;
 
-  const addButton = document.getElementById('add-component');
-  
-  addButton.addEventListener('click', () => {
-    const selectElement = document.getElementById('component-select');
-    const selectedComponentId = selectElement.value;
+      if (type === "componentList") {
+        const selectElement = document.getElementById("component-select");
 
-    if (selectedComponentId) {
-      // Send selected component ID to Figma to insert
-      parent.postMessage({ pluginMessage: { type: 'insertComponent', id: selectedComponentId } }, '*');
-    }
-  });
-</script>
+        // Populate dropdown with component names
+        components.forEach((component) => {
+          const option = document.createElement("option");
+          option.value = component.id;
+          option.text = component.name;
+          selectElement.add(option);
+        });
+      }
+    };
 
+    const addButton = document.getElementById("add-component");
+
+    addButton.addEventListener("click", () => {
+      const selectElement = document.getElementById("component-select");
+      const selectedComponentId = selectElement.value;
+
+      if (selectedComponentId) {
+        // Send selected component ID to Figma to insert
+        parent.postMessage(
+          {
+            pluginMessage: { type: "insertComponent", id: selectedComponentId },
+          },
+          "*"
+        );
+      }
+    });
+  </script>
 </html>
-
 
 <script>
   const contentBox = document.querySelector(".content__box");
@@ -239,10 +242,7 @@
       backdrop.classList.remove("hidden");
     }
   });
-
-
 </script>
-
 
 <style>
   @import url("https://fonts.googleapis.com/css2?family=Jura:wght@300..700&display=swap");
