@@ -172,24 +172,58 @@
 
   <button id="add-component">Add Component</button>
 
+  <select id="component-list">
+    <!-- Options will be populated here -->
+  </select>
+
   <script>
     // Listen for messages from the Figma code
     window.onmessage = (event) => {
+        console.log('event', event);
       const { type, components } = event.data.pluginMessage;
+      console.log(components)
+      console.log(type)
 
       if (type === "componentList") {
         const selectElement = document.getElementById("component-select");
 
         // Populate dropdown with component names
         components.forEach((component) => {
+            console.log(component);
           const option = document.createElement("option");
           option.value = component.id;
           option.text = component.name;
+        //   option.children = component.children
           selectElement.add(option);
         });
       }
+      if (type === "components") {
+        console.log("Component wholw" )
+        console.log(components)
+        console.log('event', event);
+
+      }
     };
 
+    // window.onmessage = (event) => {
+    //   const components = event.data.pluginMessage;
+    //   console.log("Component wholw");
+    //   console.log(components);
+    //   renderComponentList(components); // Pass the full component objects to your render function
+    // };
+
+    // function renderComponentList(components) {
+    //   console.log(components);
+    //   const componentList = document.getElementById("component-list");
+    //   componentList.innerHTML = "";
+    //   components.forEach((component) => {
+    //     const option = document.createElement("option");
+    //     option.value = component.id; // Use the component ID for selection
+    //     option.textContent = component.name; // Display the component's name
+    //     option.dataset.component = JSON.stringify(component); // Store the full component data in the option element
+    //     componentList.appendChild(option);
+    //   });
+    // }
     const addButton = document.getElementById("add-component");
 
     addButton.addEventListener("click", () => {
@@ -204,7 +238,8 @@
           },
           "*"
         );
-      }
+        
+    }
     });
   </script>
 </html>
