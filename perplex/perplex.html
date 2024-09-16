@@ -1,0 +1,72 @@
+<!-- src/ui.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Component Variants</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input { width: calc(100% - 10px); padding: 8px; margin-bottom: 10px; }
+    button { padding: 10px; }
+    .replacement { margin-bottom: 10px; }
+    #elementList { margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <h2>Create Component Variants</h2>
+  
+  <div id="selectedComponentInfo">
+    <h3 id="componentName">Selected Component: None</h3>
+    <div id="elementList"></div>
+  </div>
+
+  <button id="generateVariants" disabled>Generate Variants</button>
+
+  <script>
+    // Listen for messages from Figma about selected component details
+    window.onmessage = (event) => {
+        console.log(event)
+      const msg = event.data.pluginMessage;
+      console.log(msg);
+      console.log('msg');
+      if (msg.type === 'update-component-name') {
+        document.getElementById('componentName').innerText = `Selected Component: ${msg.name}`;
+        populateElementList(msg.elements);
+        document.getElementById('generateVariants').disabled = false; // Enable button after selection
+      }
+    };
+
+    function populateElementList(elements) {
+      const elementList = document.getElementById('elementList');
+      elementList.innerHTML = ''; // Clear previous entries
+      
+      elements.forEach((element) => {
+        const div = document.createElement('div');
+        div.className = 'replacement';
+        div.innerHTML = `
+          <input type="text" placeholder="Element Name" class="elementName" value="${element.name}" readonly />
+          <input type="text" placeholder="AI Prompt" class="aiPrompt" />
+        `;
+        elementList.appendChild(div);
+      });
+    }
+
+    document.getElementById('generateVariants').onclick = () => {
+      const replacements = Array.from(document.querySelectorAll('.replacement')).map(replacement => ({
+        elementName: replacement.querySelector('.elementName').value,
+        prompt: replacement.querySelector('.aiPrompt').value,
+      }));
+      console.log(replacements)
+    //   const variantCount = parseInt(prompt("Enter number of variants to create:", "1"));
+      const variantCount = 3;
+
+      console.log('post duplicate componenet')
+      parent.postMessage({ pluginMessage: { type: 'duplicate-component', replacements, variantCount } }, '*');
+    };
+    
+    // Notify Figma of the selected component when the plugin is opened
+    parent.postMessage({ pluginMessage: { type: 'get-selected-component' } }, '*');
+    
+  </script>
+</body>
+</html>

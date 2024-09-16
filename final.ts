@@ -2,6 +2,8 @@ figma.showUI(__html__);
 
 figma.ui.resize(350, 500);
 
+console.log('UI')
+
 async function findComponentsWithCriteria() {
   // Load all pages asynchronously
   await figma.loadAllPagesAsync();
@@ -76,3 +78,37 @@ figma.ui.onmessage = async (message) => {
 // <<<<<<< Tabnine <<<<<<<
 // figma.ui.onmessage = (message) => {//-
 //     const component = figma.getNodeById(message.id);//-
+
+// <!-- FROM CLAUDE AI -->
+// function getComponents() {
+//   const components = figma.currentPage.findAllWithCriteria({
+//     types: ["COMPONENT", "COMPONENT_SET"],
+//   });
+//   return components.map((component) => ({
+//     id: component.id,
+//     name: component.name,
+//   }));
+// }
+
+// figma.ui.onmessage = (msg) => {
+//   if (msg.type === "get-components") {
+//     const components = getComponents();
+//     figma.ui.postMessage({
+//       type: "component-list",
+//       components: components,
+//     });
+//   }
+// };
+//     figma.ui.onmessage = async (msg) => {
+//       if (msg.type === "select-component") {
+//         const component = await figma.getNodeByIdAsync(msg.id);
+//         console.log('component');
+//         console.log(component);
+//         console.log('component on message');
+//         if (component) {
+//           figma.currentPage.selection = [component as SceneNode];
+//           figma.viewport.scrollAndZoomIntoView([component]);
+//         }
+//       }
+//     };
+// <!-- FROM CLAUDE AI -->

@@ -88,6 +88,7 @@
         />
       </svg>
     </div>
+
     <div class="content__box">
       <div class="duplicate__box">
         <h5 class="duplicate">
@@ -99,9 +100,14 @@
           min="1"
           max="100"
           step="1"
+          maxlength="1"
           id="instanceValue"
+          value="1"
         />
       </div>
+    </div>
+    
+    <div class="add__box hidden">
       <div class="file__box">
         <svg
           width="40"
@@ -118,6 +124,12 @@
       </div>
       <p class="file__label">
         Click Add to select component you want to duplicate
+      </p>
+    </div>
+
+    <div class="selection__box hidden">
+      <p class="selection__panel">
+        Select the element you want to replace
       </p>
     </div>
 
@@ -156,27 +168,30 @@
           placeholder="Enter Prompt here"
         />
       </div>
+       <div className="pointer-events-none absolute top-1/2 right-2 transform -translate-y-1/2">
+          <div className="w-0 h-0 border-l-[5px] border-r-[5px] border-t-[5px] border-l-transparent border-r-transparent border-t-white"></div>
+        </div>
       <div class="generate__buttondiv">
         <button class="generate__button">Generate</button>
       </div>
     </div>
+
+    <ul id="component-list"></ul>
 
     <div class="button__box">
       <button class="button__next" id="button__next">Next</button>
     </div>
   </div>
 
-  <select id="component-select">
-    <option value="" disabled selected>Select a component</option>
-  </select>
-
+  
+<!-- 
   <button id="add-component">Add Component</button>
 
   <select id="component-list">
-    <!-- Options will be populated here -->
-  </select>
+    Options will be populated here
+  </select> -->
 
-  <script>
+   <script>
     // Listen for messages from the Figma code
     window.onmessage = (event) => {
         console.log('event', event);
@@ -189,6 +204,7 @@
 
         // Populate dropdown with component names
         components.forEach((component) => {
+          console.log('each component')
             console.log(component);
           const option = document.createElement("option");
           option.value = component.id;
@@ -241,11 +257,49 @@
         
     }
     });
-  </script>
+  </script> 
 </html>
+
+
+
+<!-- FROM CLAUDE AI -->
+<!-- <script>
+window.onmessage = async (event) => {
+  const message = event.data.pluginMessage;
+  console.log('message')
+  console.log(message);
+  console.log('message')
+  if (message.type === 'component-list') {
+    const componentList = document.getElementById('component-list');
+    console.log(componentList)
+    console.log('component-list')
+    componentList.innerHTML = message.components.map(component => 
+      `<li data-id="${component.id}">${component.name}</li>`
+    ).join('');
+  }
+};
+
+document.getElementById('component-list').addEventListener('click', (event) => {
+  if (event.target.tagName === 'LI') {
+    parent.postMessage({ 
+      pluginMessage: { 
+        type: 'select-component', 
+        id: event.target.dataset.id 
+      } 
+    }, '*');
+  }
+});
+
+parent.postMessage({ pluginMessage: { type: 'get-components' } }, '*');
+</script> -->
+<!-- FROM CLAUDE AI -->
+
+
 
 <script>
   const contentBox = document.querySelector(".content__box");
+  const addBox = document.querySelector(".add__box");
+  const selectionBox = document.querySelector(".selection__box");
   const buttonNext = document.getElementById("button__next");
   const analyzeBox = document.querySelector(".analyze__box");
   const promptBox = document.querySelector(".prompt__box");
@@ -253,29 +307,56 @@
   const analyzed = document.querySelector(".analyzed");
   const generateBox = document.querySelector(".generate__box");
   const backdrop = document.querySelector(".backdrop");
-
+  
+  const instanceValue = document.getElementById('instanceValue');
+  console.log(instanceValue);
+  
   buttonNext.addEventListener("click", function () {
     console.log("Button next clicked");
     const contentBoxState = contentBox.classList.contains("hidden");
+    const selectionBoxState = selectionBox.classList.contains("hidden");
     const analyzeBoxState = analyzeBox.classList.contains("hidden");
     const promptBoxState = promptBox.classList.contains("hidden");
     const generateBoxState = generateBox.classList.contains("hidden");
-
-    if (!contentBoxState && analyzeBoxState) {
+    const addBoxState = addBox.classList.contains("hidden");
+    
+    
+    
+    // console.log(contentBoxState, addBoxState)
+    
+    // to show addBox element
+    if (!contentBoxState && addBoxState) {
+      const instanceValueNumber = +instanceValue.value;
+      console.log(instanceValueNumber)
+      
       contentBox.classList.add("hidden");
-      analyzeBox.classList.remove("hidden");
+      parent.postMessage(
+          {
+            pluginMessage: { type: "instanceValue", instance: instanceValueNumber },
+          },
+          "*"
+        );
+      addBox.classList.remove("hidden");
+    }
+    
+    // to show selection element
+    if (!addBoxState && selectionBoxState) {
+      addBox.classList.add("hidden");
+      selectionBox.classList.remove("hidden");
+      console.log('selectionBoxState')
     }
 
-    if (!analyzeBoxState && promptBoxState) {
-      promptBox.classList.remove("hidden");
-      analyzing.classList.add("hidden");
-      analyzed.classList.remove("hidden");
-    }
+    // if (!addBoxState && analyzeBoxState) {
+    //   // promptBox.classList.remove("hidden");
+    //   analyzing.classList.add("hidden");
+    //   // analyzed.classList.remove("hidden");
+    // }
 
-    if (!analyzeBoxState && !promptBoxState && generateBoxState) {
-      generateBox.classList.remove("hidden");
-      backdrop.classList.remove("hidden");
-    }
+
+    // if (!analyzeBoxState && !promptBoxState && generateBoxState) {
+    //   generateBox.classList.remove("hidden")
+    //   backdrop.classList.remove("hidden");
+    // }
   });
 </script>
 
@@ -337,6 +418,30 @@
   #instanceValue::placeholder {
     color: #b9b0b0;
   }
+
+    /* ------------------------------------------------------------------------------------- */
+  /* ------------- ADD BOX --------------------------- */
+  /* ------------------------------------------------------------------------------------- */ 
+.selection__box {
+
+}
+
+.selection__panel {
+  background-color: #b2db11;
+  color: #000;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 12px;
+  padding: 7px 20px;
+  letter-spacing: -1.1px;
+}
+
+
+    /* ------------------------------------------------------------------------------------- */
+  /* ------------- FILE --------------------------- */
+  /* ------------------------------------------------------------------------------------- */
+
+
   .file__box {
     display: flex;
     align-items: center;
