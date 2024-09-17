@@ -151,7 +151,8 @@ figma.ui.onmessage = async (msg) => {
                 newInstance === null || newInstance === void 0 ? void 0 : newInstance.children.forEach(async (child, index) => {
                     console.log(`Child ${index + 1}: ${child.name} (Type: ${child.type})`);
                     if (child.type === "TEXT") {
-                        await modifyTextNode(child, elements.prompt);
+                        console.log(child);
+                        await modifyTextNode(child, 'sss');
                     }
                     if (child.type === "RECTANGLE") {
                         //   await modifyImageNode(child, imageBytes);
@@ -161,7 +162,7 @@ figma.ui.onmessage = async (msg) => {
             figma.currentPage.appendChild(newInstance);
         }
         figma.notify(`${variants.length} variants created!`);
-        figma.closePlugin();
+        // figma.closePlugin();
     }
 };
 // when using .clone() method

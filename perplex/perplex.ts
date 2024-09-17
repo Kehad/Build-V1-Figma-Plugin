@@ -183,7 +183,8 @@ figma.ui.onmessage = async (msg) => {
             );
 
             if (child.type === "TEXT") {
-              await modifyTextNode(child, elements.prompt);
+                console.log(child)
+              await modifyTextNode(child,  'sss');
             }
             if (child.type === "RECTANGLE") {
             //   await modifyImageNode(child, imageBytes);
@@ -195,7 +196,7 @@ figma.ui.onmessage = async (msg) => {
     }
 
     figma.notify(`${variants.length} variants created!`);
-    figma.closePlugin();
+    // figma.closePlugin();
   }
 };
 
