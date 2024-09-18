@@ -2,71 +2,210 @@
 
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Component Variants</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    input { width: calc(100% - 10px); padding: 8px; margin-bottom: 10px; }
-    button { padding: 10px; }
-    .replacement { margin-bottom: 10px; }
-    #elementList { margin-bottom: 20px; }
-  </style>
-</head>
-<body>
-  <h2>Create Component Variants</h2>
-  
-  <div id="selectedComponentInfo">
-    <h3 id="componentName">Selected Component: None</h3>
-    <div id="elementList"></div>
-  </div>
-
-  <button id="generateVariants" disabled>Generate Variants</button>
-
-  <script>
-    // Listen for messages from Figma about selected component details
-    window.onmessage = (event) => {
-        console.log(event)
-      const msg = event.data.pluginMessage;
-      console.log(msg);
-      console.log('msg');
-      if (msg.type === 'update-component-name') {
-        document.getElementById('componentName').innerText = `Selected Component: ${msg.name}`;
-        populateElementList(msg.elements);
-        document.getElementById('generateVariants').disabled = false; // Enable button after selection
+  <head>
+    <title>Component Variants</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
       }
-    };
+      input {
+        width: calc(100% - 10px);
+        padding: 8px;
+        margin-bottom: 10px;
+      }
+      button {
+        padding: 10px;
+      }
+      .replacement {
+        margin-bottom: 10px;
+      }
+      #elementList {
+        margin-bottom: 20px;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Create Component Variants</h2>
 
-    function populateElementList(elements) {
-      const elementList = document.getElementById('elementList');
-      elementList.innerHTML = ''; // Clear previous entries
-      
-      elements.forEach((element) => {
-        const div = document.createElement('div');
-        div.className = 'replacement';
-        div.innerHTML = `
-          <input type="text" placeholder="Element Name" class="elementName" value="${element.name}" readonly />
-          <input type="text" placeholder="AI Prompt" class="aiPrompt" />
-        `;
-        elementList.appendChild(div);
-      });
-    }
+    <div class="content__box">
+      <div class="duplicate__box">
+        <h5 class="duplicate">
+          Select the number of component you want to duplicate
+        </h5>
+        <input
+          type="number"
+          placeholder="1"
+          min="1"
+          max="100"
+          step="1"
+          maxlength="1"
+          id="instanceValue"
+          value="1"
+        />
+      </div>
+    </div>
 
-    document.getElementById('generateVariants').onclick = () => {
-      const replacements = Array.from(document.querySelectorAll('.replacement')).map(replacement => ({
-        elementName: replacement.querySelector('.elementName').value,
-        prompt: replacement.querySelector('.aiPrompt').value,
-      }));
-      console.log(replacements)
-    //   const variantCount = parseInt(prompt("Enter number of variants to create:", "1"));
-      const variantCount = 1;
+    <div class="add__box hidden">
+      <div class="file__box">
+        <svg
+          width="40"
+          height="40"
+          viewBox="0 0 100 101"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M45.8333 54.8481H0V46.5148H45.8333V0.681427H54.1667V46.5148H100V54.8481H54.1667V100.681H45.8333V54.8481Z"
+            fill="#A1A5B3"
+          />
+        </svg>
+      </div>
+      <p class="file__label">
+        Click Add to select component you want to duplicate
+      </p>
+    </div>
 
-      console.log('post duplicate componenet')
-      parent.postMessage({ pluginMessage: { type: 'duplicate-component', replacements, variantCount } }, '*');
-    };
-    
-    // Notify Figma of the selected component when the plugin is opened
-    parent.postMessage({ pluginMessage: { type: 'get-selected-component' } }, '*');
-    
-  </script>
-</body>
+    <div class="selection__box hidden">
+      <p class="selection__panel">Select the element you want to replace</p>
+
+      <div id="selectedComponentInfo">
+        <h3 id="componentName">Selected Component: None</h3>
+        <div id="elementList"></div>
+      </div>
+    </div>
+
+    <div class="prompt__box hidden">
+      <div class="prompt__innerbox">
+        <div class="prompt__container">
+          <p class="prompt__label">Click to enter prompt to replace</p>
+          <input type="text" placeholder="Image" id="prompt__input" />
+        </div>
+      </div>
+    </div>
+
+    <button id="generateVariants" disabled>Generate Variants</button>
+
+    <div class="button__box">
+      <button class="button__next" id="button__next">Next</button>
+    </div>
+
+    <script>
+      const buttonNext = document.getElementById("button__next");
+      const contentBox = document.querySelector(".content__box");
+      const selectionBox = document.querySelector(".selection__box");
+      const addBox = document.querySelector(".add__box");
+      const instanceValue = document.getElementById("instanceValue");
+      const promptBox = document.querySelector(".prompt__box");
+
+      // Listen for messages from Figma about selected component details
+      window.onmessage = (event) => {
+        console.log(event);
+        const msg = event.data.pluginMessage;
+        console.log(msg);
+        console.log("msg");
+        if (msg.type === "update-component-name") {
+          document.getElementById(
+            "componentName"
+          ).innerText = `Selected Component: ${msg.name}`;
+          populateElementList(msg.elements, duplicateHandler);
+          document.getElementById("generateVariants").disabled = false; // Enable button after selection
+        }
+      };
+
+      function populateElementList(elements, duplicate) {
+        const elementList = document.getElementById("elementList");
+        elementList.innerHTML = ""; // Clear previous entries
+
+        elements.forEach((element) => {
+          const div = document.createElement("div");
+          div.className = "replacement";
+          div.innerHTML = `
+            <button class="elementName">
+                ${element.name}
+            </button>
+            `;
+          div.addEventListener("click", duplicate);
+          //   <input type="text" placeholder="AI Prompt" class="aiPrompt" />
+          elementList.appendChild(div);
+        });
+      }
+
+      function duplicateHandler() {
+        const promptBoxState = promptBox.classList.contains("hidden");
+        const selectionBoxState = selectionBox.classList.contains("hidden");
+
+        if (!selectionBoxState && promptBoxState) {
+            console.log("selectionBoxState");
+          promptBox.classList.remove("hidden");
+          selectionBox.classList.add("hidden");
+        }
+
+        //     const replacements = Array.from(
+        //     document.querySelectorAll(".replacement")
+        //   ).map((replacement) => ({
+        //     elementName: replacement.querySelector(".elementName").value,
+        //     prompt: replacement.querySelector(".aiPrompt").value,
+        //   }));
+        //   console.log(replacements);
+        //   //   const variantCount = parseInt(prompt("Enter number of variants to create:", "1"));
+        //   const variantCount = 1;
+
+        //   console.log("post duplicate componenet");
+        //   parent.postMessage(
+        //     {
+        //       pluginMessage: {
+        //         type: "duplicate-component",
+        //         replacements,
+        //        instanceValueNumber,
+        //       },
+        //     },
+        //     "*"
+        //   );
+      }
+
+      document.getElementById("generateVariants").onclick = () => {
+        console.log("Button next clicked");
+        const contentBoxState = contentBox.classList.contains("hidden");
+        const selectionBoxState = selectionBox.classList.contains("hidden");
+        const addBoxState = addBox.classList.contains("hidden");
+
+        // console.log(contentBoxState, addBoxState)
+
+        // to show addBox element
+        if (!contentBoxState && selectionBoxState) {
+          const instanceValueNumber = +instanceValue.value;
+          console.log(instanceValueNumber);
+
+          contentBox.classList.add("hidden");
+          parent.postMessage(
+            {
+              pluginMessage: {
+                type: "instanceValue",
+                instance: instanceValueNumber,
+              },
+            },
+            "*"
+          );
+          selectionBox.classList.remove("hidden");
+        }
+
+        // to show selection element
+        if (!addBoxState && selectionBoxState) {
+          addBox.classList.add("hidden");
+          selectionBox.classList.remove("hidden");
+          console.log("selectionBoxState");
+        }
+      };
+
+      // Notify Figma of the selected component when the plugin is opened
+      parent.postMessage(
+        { pluginMessage: { type: "get-selected-component" } },
+        "*"
+      );
+    </script>
+  </body>
 </html>
