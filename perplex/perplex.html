@@ -26,6 +26,9 @@
       .hidden {
         display: none;
       }
+      .paragraph {
+        color: red,
+      }
     </style>
   </head>
   <body>
@@ -82,9 +85,12 @@
       <div class="prompt__innerbox">
         <div class="prompt__container">
           <p class="prompt__label">Click to enter prompt to replace</p>
-          <input type="text" placeholder="Image" id="prompt__input" />
+          <input type="text" placeholder="Image" id="prompt__input" class="prompt__input" />
         </div>
       </div>
+        <div id="single_element"></div>
+
+      <button class="prompt__button">Replace</button>
     </div>
 
     <button id="generateVariants" disabled>Generate Variants</button>
@@ -100,6 +106,8 @@
       const addBox = document.querySelector(".add__box");
       const instanceValue = document.getElementById("instanceValue");
       const promptBox = document.querySelector(".prompt__box");
+      const promptInput = document.querySelector(".prompt__input");
+      const promptButton = document.querySelector(".prompt__button");
 
       // Listen for messages from Figma about selected component details
       window.onmessage = (event) => {
@@ -128,21 +136,40 @@
                 ${element.name}
             </button>
             `;
-          div.addEventListener("click", duplicate);
+          div.addEventListener("click", () => duplicate(element.name));
           //   <input type="text" placeholder="AI Prompt" class="aiPrompt" />
           elementList.appendChild(div);
         });
       }
 
-      function duplicateHandler() {
+      function duplicateHandler(singleElementName) {
         const promptBoxState = promptBox.classList.contains("hidden");
         const selectionBoxState = selectionBox.classList.contains("hidden");
+        const promptMessage = promptInput.value;
+         const singleElement = document.getElementById("single_element");
+        singleElement.innerHTML = ""; 
+
+        const div = document.createElement("div");
+          div.className = "paragraph";
+          div.innerHTML = `
+            <p class="elementName">
+                aa
+            </p>
+            `;
+          
+          //   <input type="text" placeholder="AI Prompt" class="aiPrompt" />
+          singleElement.appendChild(div);
+          console.log(singleElementName)
 
         if (!selectionBoxState && promptBoxState) {
             console.log("selectionBoxState");
           promptBox.classList.remove("hidden");
           selectionBox.classList.add("hidden");
         }
+
+promptButton.addEventListener("click", function (evt) {
+    console.log(promptInput.value);
+});
 
         //     const replacements = Array.from(
         //     document.querySelectorAll(".replacement")
@@ -155,16 +182,16 @@
         //   const variantCount = 1;
 
         //   console.log("post duplicate componenet");
-        //   parent.postMessage(
-        //     {
-        //       pluginMessage: {
-        //         type: "duplicate-component",
-        //         replacements,
-        //        instanceValueNumber,
-        //       },
-        //     },
-        //     "*"
-        //   );
+          parent.postMessage(
+            {
+              pluginMessage: {
+                type: "duplicate-component",
+                replacements,
+               
+              },
+            },
+            "*"
+          );
       }
 
       document.getElementById("generateVariants").onclick = () => {
