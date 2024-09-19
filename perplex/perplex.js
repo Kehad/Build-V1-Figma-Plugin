@@ -112,10 +112,15 @@ figma.ui.onmessage = async (msg) => {
             figma.notify("Please select a component get selected component.");
             return;
         }
+        console.log(selectedNode);
+        console.log(selectedNode.type);
         // Get all child elements of the selected component
         const elements = selectedNode.children.map((child) => ({
             name: child.name,
             id: child.id,
+            type: child.type,
+           
+            // Add more properties as needed
         }));
         // Send back the component name and its elements to the UI
         figma.ui.postMessage({

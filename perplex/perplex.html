@@ -33,7 +33,6 @@
         /* justify-content: space-between; */
         z-index: 100;
         /* background-color: green; */
-
       }
       .hidden {
         display: none;
@@ -67,6 +66,9 @@
         /* background-color: red; */
         height: 100%;
       }
+      .hidden {
+        display: none;
+      }
       .duplicate {
         font-size: 10px;
         font-weight: 400;
@@ -96,6 +98,16 @@
       /* ------------- SELECTION PANEL --------------------------- */
       /* ------------------------------------------------------------------------------------- */
       .selection__box {
+        height: 100%;
+      }
+      .selection__cont {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        justify-content: center;
+        height: 100%;
+        padding: 0 1rem;
       }
 
       .selection__panel {
@@ -106,6 +118,87 @@
         font-size: 12px;
         padding: 7px 20px;
         letter-spacing: -1.1px;
+        width: max-content;
+      }
+      #componentName {
+        font-size: 24px;
+        margin-bottom: 1rem;
+      }
+
+      .elementName {
+        margin: 0.5rem 0rem;
+      }
+
+      /* ------------------------------------------------------------------------------------- */
+      /* ------------- PROMPT --------------------------- */
+      /* ------------------------------------------------------------------------------------- */
+
+      .prompt__box {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        gap: 35px;
+        height: 100%;
+        padding: 1rem;
+      }
+      .hidden {
+        display: none;
+      }
+      .prompt__container {
+        /* width: 250px; */
+        /* height: 70px; */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        z-index: 1;
+      }
+      .prompt__label {
+        font-size: 15px;
+        font-weight: 400;
+        letter-spacing: 0px;
+        margin-bottom: 5px;
+        line-height: normal;
+        font-style: normal;
+        margin-bottom: 1rem;
+      }
+      .prompt__input {
+        font-size: 10px;
+        width: 290px;
+        background: #454545;
+        height: 30px;
+        height: min-content;
+        outline: none;
+        border: hidden;
+        border-bottom: 2px solid #888585;
+        border-radius: 5px;
+        padding: 0px 10px;
+        padding: 10px;
+        color: #fff;
+      }
+      .prompt__input::placeholder {
+        color: #fff;
+      }
+      .prompt__input:focus {
+        outline: none;
+      }
+      .generate__buttondiv {
+        display: flex;
+        align-self: flex-end;
+        justify-content: flex-end;
+        z-index: 1;
+      }
+      .prompt__button {
+        background-color: #b2db11;
+        color: #000;
+        font-weight: 600;
+        
+        padding: 10px 15px;
+        border-radius: 5px;
+        border: none;
+        display: flex;
+        justify-content: flex-end;
       }
 
       /* button {
@@ -167,21 +260,27 @@
       </div>
 
       <div class="selection__box hidden">
-        <p class="selection__panel">Select the element you want to replace</p>
+        <div class="selection__cont">
+          <div class="">
+            <h3 id="componentName">Selected Component: None</h3>
+            <p class="selection__panel">
+              Select the element you want to replace
+            </p>
+          </div>
 
-        <div id="selectedComponentInfo">
-          <h3 id="componentName">Selected Component: None</h3>
-          <div id="elementList"></div>
+          <div id="selectedComponentInfo">
+            <div id="elementList"></div>
+          </div>
         </div>
       </div>
 
       <div class="prompt__box hidden">
         <div class="prompt__innerbox">
+          <p class="prompt__label"></p>
           <div class="prompt__container">
-            <p class="prompt__label">Click to enter prompt to replace</p>
             <input
               type="text"
-              placeholder="Image"
+              placeholder="Enter Prompt to replace text here"
               id="prompt__input"
               class="prompt__input"
             />
@@ -189,11 +288,13 @@
         </div>
         <div id="single_element"></div>
 
-        <button class="prompt__button">Replace</button>
+        <div class="generate__buttondiv">
+          <button class="prompt__button">Replace</button>
+        </div>
       </div>
 
       <div class="button__box">
-        <button id="generateVariants" class="button__next" disabled>
+        <button id="generateVariants" class="prompt__button" disabled>
           Generate Variants
         </button>
         <!-- <button class="button__next" id="button__next">Next</button> -->
@@ -208,7 +309,9 @@
       const instanceValue = document.getElementById("instanceValue");
       const promptBox = document.querySelector(".prompt__box");
       const promptInput = document.querySelector(".prompt__input");
+      const promptLabel = document.querySelector(".prompt__label");
       const promptButton = document.querySelector(".prompt__button");
+     
 
       // Listen for messages from Figma about selected component details
       window.onmessage = (event) => {
@@ -248,21 +351,23 @@
       function duplicateHandler(ElementName) {
         const promptBoxState = promptBox.classList.contains("hidden");
         const selectionBoxState = selectionBox.classList.contains("hidden");
-    const contentBoxState = contentBox.classList.contains("hidden");
+        // const contentBoxState = contentBox.classList.contains("hidden");
 
-        const singleElement = document.getElementById("single_element");
-        singleElement.innerHTML = "";
+        // const singleElement = document.getElementById("single_element");
+        // singleElement.innerHTML = "";
 
-        const div = document.createElement("div");
-        div.className = "paragraph";
-        div.innerHTML = `
-        <p class="elementName">
-            ${ElementName.name}
-            </p>
-            `;
+        // const div = document.createElement("div");
+        // div.className = "paragraph";
+        // div.innerHTML = `
+        // <p class="elementName">
+        //     ${ElementName.name}
+        //     </p>
+        //     `;
 
-        //   <input type="text" placeholder="AI Prompt" class="aiPrompt" />
-        singleElement.appendChild(div);
+        // //   <input type="text" placeholder="AI Prompt" class="aiPrompt" />
+        // singleElement.appendChild(div);
+        promptLabel.textContent = ElementName.name;
+        promptInput.placeholder = `Enter Prompt to replace ${ElementName.type === 'TEXT' ? 'text' : 'image'} here`;
 
         if (!selectionBoxState && promptBoxState) {
           console.log("selectionBoxState");
@@ -326,12 +431,14 @@
             "*"
           );
           selectionBox.classList.remove("hidden");
-        }
+        } 
 
         // to show selection element
-        if (!addBoxState && selectionBoxState) {
+        if (!contentBoxState && selectionBoxState) {
+          console.log(contentBox);
           addBox.classList.add("hidden");
-          selectionBox.classList.remove("hidden");
+          contentBox.classList.add("hidden");
+          //   selectionBox.classList.remove("hidden");
           console.log("selectionBoxState");
         }
       };
