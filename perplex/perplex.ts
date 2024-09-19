@@ -2,7 +2,8 @@
 
 figma.showUI(__html__);
 
-figma.ui.resize(300, 400);
+figma.ui.resize(350, 500);
+
 
 // figma.ui.postMessage({
 //   type: "update-component-name",
@@ -94,8 +95,8 @@ function hexToRgb(hex: string) {
 
 async function modifyTextNode(textNode: TextNode, newText: string) {
   const fontName = textNode.fontName as FontName;
-    await figma.loadFontAsync(fontName);
-    console.log(textNode.characters)
+  await figma.loadFontAsync(fontName);
+  console.log(textNode.characters);
   textNode.characters = newText;
 }
 
@@ -134,6 +135,7 @@ figma.ui.onmessage = async (msg) => {
     // Get all child elements of the selected component
     const elements = selectedNode.children.map((child) => ({
       name: child.name,
+      id: child.id,
     }));
 
     // Send back the component name and its elements to the UI
@@ -160,41 +162,67 @@ figma.ui.onmessage = async (msg) => {
     figma.notify(`Selected Component: ${selectedNode.name}`);
 
     const variants = [];
+    console.log(msg);
 
-    for (let i = 0; i < msg.variantCount; i++) {
+    for (let i = 0; i < 4; i++) {
       //   const newVariant = selectedNode.clone();
-        const newInstance = selectedNode.createInstance();
-        console.log(newInstance);
+      const newInstance = selectedNode.createInstance();
+      console.log(newInstance);
 
       console.log(msg.replacements);
-      //   newVariant.name = `${selectedNode.name} Variant ${i + 1}`;
+      console.log("msg");
+      console.log(msg);
+      // newVariant.name = `${selectedNode.name} Variant ${i + 1}`;
       const elements = msg.replacements;
-      console.log("elements", elements);
-      console.log(elements);
+      //   console.log("elements", elements);
+      //   console.log(elements);
 
       //   Replace specified elements based on AI prompts
-    //   for (const replacement of elements) {
-    //     console.log("for ");
-    //     console.log(elements);
-    //     console.log(replacement);
-    //     console.log(`for ${replacement}`);
+      //   for (const replacement of elements) {
+      //     console.log("for ");
+      //     console.log(elements);
+      //     console.log(replacement);
+      //     console.log(`for ${replacement}`);
 
-    //       console.log(`newInstance ${newInstance}`);
-    //       newInstance?.children.forEach(async (child, index) => {
-    //         console.log(
-    //           `Child ${index + 1}: ${child.name} (Type: ${child.type})`
-    //         );
+      console.log("newInstance");
+      console.log(newInstance);
+      console.log("newInstance");
+      console.log(newInstance.children[0]);
 
-    //         if (child.type === "TEXT") {
-    //             console.log(child)
-    //           await modifyTextNode(child,  replacement.prompt);
-    //         }
-    //         if (child.type === "RECTANGLE") {
-    //         //   await modifyImageNode(child, imageBytes);
-    //         }
-    //       });
-       
-    //   }
+      const newArray = newInstance.children.filter(
+        (child) => child.id.slice(-7) === elements.id
+      );
+
+      if (newArray.length > 0) {
+        const targetNode = newArray[0]; // Assuming there's only one node with the matching ID
+        console.log(targetNode.name);
+        console.log(targetNode.type);
+
+           if (targetNode.type === "TEXT") {
+               await modifyTextNode(targetNode,  elements.prompt);
+          } 
+          if (targetNode.type === "RECTANGLE") {
+            //await modifyImageNode(child, imageBytes); 
+          }
+      } else {
+        console.log("No matching node found.");
+      }
+
+      newInstance?.children.forEach(async (child, index) => {
+        console.log(`Child ${index + 1}: ${child.name} (Type: ${child.type})`);
+
+        if (child.type === "TEXT") {
+          // console.log(child)
+          // console.log(elements.name)
+          // console.log(child.name)
+          //   await modifyTextNode(child,  elements.prompt);
+        }
+        //         if (child.type === "RECTANGLE") {
+        //         //   await modifyImageNode(child, imageBytes);
+        //         }
+      });
+
+      //   }
       figma.currentPage.appendChild(newInstance);
     }
 
@@ -202,8 +230,6 @@ figma.ui.onmessage = async (msg) => {
     // figma.closePlugin();
   }
 };
-
-
 
 // when using .clone() method
 // for (const replacement of elements) {

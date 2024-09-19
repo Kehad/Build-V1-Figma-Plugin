@@ -1,7 +1,7 @@
 "use strict";
 // src/code.js
 figma.showUI(__html__);
-figma.ui.resize(300, 400);
+figma.ui.resize(350, 500);
 // figma.ui.postMessage({
 //   type: "update-component-name",
 //   elements: 'ssss'
@@ -115,6 +115,7 @@ figma.ui.onmessage = async (msg) => {
         // Get all child elements of the selected component
         const elements = selectedNode.children.map((child) => ({
             name: child.name,
+            id: child.id,
         }));
         // Send back the component name and its elements to the UI
         figma.ui.postMessage({
@@ -135,34 +136,55 @@ figma.ui.onmessage = async (msg) => {
         // Notify user of selection
         figma.notify(`Selected Component: ${selectedNode.name}`);
         const variants = [];
-        for (let i = 0; i < msg.variantCount; i++) {
+        console.log(msg);
+        for (let i = 0; i < 4; i++) {
             //   const newVariant = selectedNode.clone();
             const newInstance = selectedNode.createInstance();
             console.log(newInstance);
             console.log(msg.replacements);
-            //   newVariant.name = `${selectedNode.name} Variant ${i + 1}`;
+            console.log("msg");
+            console.log(msg);
+            // newVariant.name = `${selectedNode.name} Variant ${i + 1}`;
             const elements = msg.replacements;
-            console.log("elements", elements);
-            console.log(elements);
+            //   console.log("elements", elements);
+            //   console.log(elements);
             //   Replace specified elements based on AI prompts
             //   for (const replacement of elements) {
             //     console.log("for ");
             //     console.log(elements);
             //     console.log(replacement);
             //     console.log(`for ${replacement}`);
-            //       console.log(`newInstance ${newInstance}`);
-            //       newInstance?.children.forEach(async (child, index) => {
-            //         console.log(
-            //           `Child ${index + 1}: ${child.name} (Type: ${child.type})`
-            //         );
-            //         if (child.type === "TEXT") {
-            //             console.log(child)
-            //           await modifyTextNode(child,  replacement.prompt);
-            //         }
-            //         if (child.type === "RECTANGLE") {
-            //         //   await modifyImageNode(child, imageBytes);
-            //         }
-            //       });
+            console.log("newInstance");
+            console.log(newInstance);
+            console.log("newInstance");
+            console.log(newInstance.children[0]);
+            const newArray = newInstance.children.filter((child) => child.id.slice(-7) === elements.id);
+            if (newArray.length > 0) {
+                const targetNode = newArray[0]; // Assuming there's only one node with the matching ID
+                console.log(targetNode.name);
+                console.log(targetNode.type);
+                if (targetNode.type === "TEXT") {
+                    await modifyTextNode(targetNode, elements.prompt);
+                }
+                if (targetNode.type === "RECTANGLE") {
+                    //await modifyImageNode(child, imageBytes); 
+                }
+            }
+            else {
+                console.log("No matching node found.");
+            }
+            newInstance === null || newInstance === void 0 ? void 0 : newInstance.children.forEach(async (child, index) => {
+                console.log(`Child ${index + 1}: ${child.name} (Type: ${child.type})`);
+                if (child.type === "TEXT") {
+                    // console.log(child)
+                    // console.log(elements.name)
+                    // console.log(child.name)
+                    //   await modifyTextNode(child,  elements.prompt);
+                }
+                //         if (child.type === "RECTANGLE") {
+                //         //   await modifyImageNode(child, imageBytes);
+                //         }
+            });
             //   }
             figma.currentPage.appendChild(newInstance);
         }

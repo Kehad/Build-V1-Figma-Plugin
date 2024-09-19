@@ -5,16 +5,110 @@
   <head>
     <title>Component Variants</title>
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=Jura:wght@300..700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+      }
       body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
+        background-color: #333333;
+        color: #fff;
+        font-family: "Jura", sans-serif;
+        /* margin: 30px 0; */
       }
       input {
         width: calc(100% - 10px);
         padding: 8px;
         margin-bottom: 10px;
       }
-      button {
+      .box {
+        display: flex;
+        /* width: 280px; */
+        flex-direction: column;
+        align-items: center;
+        /* justify-content: center; */
+        /* margin: 0 auto; */
+        height: 500px;
+        /* justify-content: space-between; */
+        z-index: 100;
+        /* background-color: green; */
+
+      }
+      .hidden {
+        display: none;
+      }
+
+      .button__box {
+        align-self: flex-end;
+        margin-right: 3rem;
+        margin-bottom: 2rem;
+      }
+      .button__next {
+        background-color: #b2db11;
+        color: #000;
+        padding: 10px 25px;
+        border-radius: 5px;
+        border: none;
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-end;
+      }
+
+      /* ------------------------------------------------------------------------------------- */
+      /* ------------- Input Instance number --------------------------- */
+      /* ------------------------------------------------------------------------------------- */
+      .content__box {
+        margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        /* background-color: red; */
+        height: 100%;
+      }
+      .duplicate {
+        font-size: 10px;
+        font-weight: 400;
+        letter-spacing: 0px;
+        margin-bottom: 5px;
+        line-height: normal;
+        font-style: normal;
+      }
+      #instanceValue {
+        width: 100%;
+        width: 250px;
+
+        background: #454545;
+        height: 30px;
+        outline: none;
+        /* border: 0.1px solid #888585; */
+        border: hidden;
+        border-radius: 5px;
+        padding: 0px 10px;
+        color: #fff;
+      }
+      #instanceValue::placeholder {
+        color: #b9b0b0;
+      }
+
+      /* ------------------------------------------------------------------------------------- */
+      /* ------------- SELECTION PANEL --------------------------- */
+      /* ------------------------------------------------------------------------------------- */
+      .selection__box {
+      }
+
+      .selection__panel {
+        background-color: #b2db11;
+        color: #000;
+        font-style: italic;
+        font-weight: bold;
+        font-size: 12px;
+        padding: 7px 20px;
+        letter-spacing: -1.1px;
+      }
+
+      /* button {
         padding: 10px;
       }
       .replacement {
@@ -27,76 +121,83 @@
         display: none;
       }
       .paragraph {
-        color: red,
-      }
+        color: red;
+      } */
     </style>
   </head>
   <body>
-    <h2>Create Component Variants</h2>
-
-    <div class="content__box">
-      <div class="duplicate__box">
-        <h5 class="duplicate">
-          Select the number of component you want to duplicate
-        </h5>
-        <input
-          type="number"
-          placeholder="1"
-          min="1"
-          max="100"
-          step="1"
-          maxlength="1"
-          id="instanceValue"
-          value="1"
-        />
-      </div>
-    </div>
-
-    <div class="add__box hidden">
-      <div class="file__box">
-        <svg
-          width="40"
-          height="40"
-          viewBox="0 0 100 101"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M45.8333 54.8481H0V46.5148H45.8333V0.681427H54.1667V46.5148H100V54.8481H54.1667V100.681H45.8333V54.8481Z"
-            fill="#A1A5B3"
+    <!-- <h2>Create Component Variants</h2> -->
+    <div class="box">
+      <div class="content__box">
+        <div class="duplicate__box">
+          <h5 class="duplicate">
+            Select the number of component you want to duplicate
+          </h5>
+          <input
+            type="number"
+            placeholder="1"
+            min="1"
+            max="100"
+            step="1"
+            maxlength="1"
+            id="instanceValue"
+            value="1"
           />
-        </svg>
-      </div>
-      <p class="file__label">
-        Click Add to select component you want to duplicate
-      </p>
-    </div>
-
-    <div class="selection__box hidden">
-      <p class="selection__panel">Select the element you want to replace</p>
-
-      <div id="selectedComponentInfo">
-        <h3 id="componentName">Selected Component: None</h3>
-        <div id="elementList"></div>
-      </div>
-    </div>
-
-    <div class="prompt__box hidden">
-      <div class="prompt__innerbox">
-        <div class="prompt__container">
-          <p class="prompt__label">Click to enter prompt to replace</p>
-          <input type="text" placeholder="Image" id="prompt__input" class="prompt__input" />
         </div>
       </div>
+
+      <div class="add__box hidden">
+        <div class="file__box">
+          <svg
+            width="40"
+            height="40"
+            viewBox="0 0 100 101"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M45.8333 54.8481H0V46.5148H45.8333V0.681427H54.1667V46.5148H100V54.8481H54.1667V100.681H45.8333V54.8481Z"
+              fill="#A1A5B3"
+            />
+          </svg>
+        </div>
+        <p class="file__label">
+          Click Add to select component you want to duplicate
+        </p>
+      </div>
+
+      <div class="selection__box hidden">
+        <p class="selection__panel">Select the element you want to replace</p>
+
+        <div id="selectedComponentInfo">
+          <h3 id="componentName">Selected Component: None</h3>
+          <div id="elementList"></div>
+        </div>
+      </div>
+
+      <div class="prompt__box hidden">
+        <div class="prompt__innerbox">
+          <div class="prompt__container">
+            <p class="prompt__label">Click to enter prompt to replace</p>
+            <input
+              type="text"
+              placeholder="Image"
+              id="prompt__input"
+              class="prompt__input"
+            />
+          </div>
+        </div>
         <div id="single_element"></div>
 
-      <button class="prompt__button">Replace</button>
-    </div>
+        <button class="prompt__button">Replace</button>
+      </div>
 
-    <button id="generateVariants" disabled>Generate Variants</button>
-
-    <div class="button__box">
-      <button class="button__next" id="button__next">Next</button>
+      <div class="button__box">
+        <button id="generateVariants" class="button__next" disabled>
+          Generate Variants
+        </button>
+        <!-- <button class="button__next" id="button__next">Next</button> -->
+      </div>
     </div>
 
     <script>
@@ -119,6 +220,8 @@
           document.getElementById(
             "componentName"
           ).innerText = `Selected Component: ${msg.name}`;
+          console.log(msg.elements);
+          console.log("element selected");
           populateElementList(msg.elements, duplicateHandler);
           document.getElementById("generateVariants").disabled = false; // Enable button after selection
         }
@@ -136,40 +239,55 @@
                 ${element.name}
             </button>
             `;
-          div.addEventListener("click", () => duplicate(element.name));
+          div.addEventListener("click", () => duplicate(element));
           //   <input type="text" placeholder="AI Prompt" class="aiPrompt" />
           elementList.appendChild(div);
         });
       }
 
-      function duplicateHandler(singleElementName) {
+      function duplicateHandler(ElementName) {
         const promptBoxState = promptBox.classList.contains("hidden");
         const selectionBoxState = selectionBox.classList.contains("hidden");
-        const promptMessage = promptInput.value;
-         const singleElement = document.getElementById("single_element");
-        singleElement.innerHTML = ""; 
+    const contentBoxState = contentBox.classList.contains("hidden");
+
+        const singleElement = document.getElementById("single_element");
+        singleElement.innerHTML = "";
 
         const div = document.createElement("div");
-          div.className = "paragraph";
-          div.innerHTML = `
-            <p class="elementName">
-                aa
+        div.className = "paragraph";
+        div.innerHTML = `
+        <p class="elementName">
+            ${ElementName.name}
             </p>
             `;
-          
-          //   <input type="text" placeholder="AI Prompt" class="aiPrompt" />
-          singleElement.appendChild(div);
-          console.log(singleElementName)
+
+        //   <input type="text" placeholder="AI Prompt" class="aiPrompt" />
+        singleElement.appendChild(div);
 
         if (!selectionBoxState && promptBoxState) {
-            console.log("selectionBoxState");
+          console.log("selectionBoxState");
           promptBox.classList.remove("hidden");
           selectionBox.classList.add("hidden");
         }
 
-promptButton.addEventListener("click", function (evt) {
-    console.log(promptInput.value);
-});
+        promptButton.addEventListener("click", function (evt) {
+          const promptMessage = promptInput.value;
+          // console.log(promptInput.value);
+          const replacements = {
+            name: ElementName.name,
+            id: ElementName.id,
+            prompt: promptMessage,
+          };
+          parent.postMessage(
+            {
+              pluginMessage: {
+                type: "duplicate-component",
+                replacements,
+              },
+            },
+            "*"
+          );
+        });
 
         //     const replacements = Array.from(
         //     document.querySelectorAll(".replacement")
@@ -182,16 +300,6 @@ promptButton.addEventListener("click", function (evt) {
         //   const variantCount = 1;
 
         //   console.log("post duplicate componenet");
-          parent.postMessage(
-            {
-              pluginMessage: {
-                type: "duplicate-component",
-                replacements,
-               
-              },
-            },
-            "*"
-          );
       }
 
       document.getElementById("generateVariants").onclick = () => {
