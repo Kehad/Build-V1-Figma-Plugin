@@ -59,143 +59,144 @@ figma.ui.resize(350, 500);
 // };
 // Simulated function to get AI response based on a prompt
 async function getAIResponse(prompt) {
-    // Here you would typically call an external API to get an AI-generated response.
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(`AI Response for: ${prompt}`);
-        }, 1000); // Simulate network delay
-    });
+  // Here you would typically call an external API to get an AI-generated response.
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(`AI Response for: ${prompt}`);
+    }, 1000); // Simulate network delay
+  });
 }
 // Helper function to convert hex color to RGB format
 function hexToRgb(hex) {
-    console.log(hex);
-    if (typeof hex !== "string" || !hex.startsWith("#") || hex.length !== 7) {
-        throw new Error("Invalid hex color format");
-    }
-    const bigint = parseInt(hex.slice(1), 16);
-    const r = (bigint >> 16) & 255;
-    const g = (bigint >> 8) & 255;
-    const b = bigint & 255;
-    return { r: r / 255, g: g / 255, b: b / 255 }; // Normalize to [0,1]
+  console.log(hex);
+  if (typeof hex !== "string" || !hex.startsWith("#") || hex.length !== 7) {
+    throw new Error("Invalid hex color format");
+  }
+  const bigint = parseInt(hex.slice(1), 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return { r: r / 255, g: g / 255, b: b / 255 }; // Normalize to [0,1]
 }
 async function modifyTextNode(textNode, newText) {
-    const fontName = textNode.fontName;
-    await figma.loadFontAsync(fontName);
-    console.log(textNode.characters);
-    textNode.characters = newText;
+  const fontName = textNode.fontName;
+  await figma.loadFontAsync(fontName);
+  console.log(textNode.characters);
+  textNode.characters = newText;
 }
 async function modifyImageNode(imageNode, imageBytes) {
-    const rect = imageNode;
-    console.log(rect);
-    if (rect.fills) {
-        const fills = rect.fills;
-        const imageFill = fills.find((fill) => fill.type === "IMAGE");
-        if (imageFill) {
-            const newImage = figma.createImage(imageBytes);
-            const newImageFill = Object.assign({}, imageFill, {
-                imageHash: newImage.hash,
-            });
-            const updatedFills = fills.map((fill) => {
-                if (fill.type === "IMAGE") {
-                    return newImageFill;
-                }
-                return fill;
-            });
-            rect.fills = updatedFills;
+  const rect = imageNode;
+  console.log(rect);
+  if (rect.fills) {
+    const fills = rect.fills;
+    const imageFill = fills.find((fill) => fill.type === "IMAGE");
+    if (imageFill) {
+      const newImage = figma.createImage(imageBytes);
+      const newImageFill = Object.assign({}, imageFill, {
+        imageHash: newImage.hash,
+      });
+      const updatedFills = fills.map((fill) => {
+        if (fill.type === "IMAGE") {
+          return newImageFill;
         }
+        return fill;
+      });
+      rect.fills = updatedFills;
     }
+  }
 }
+
+// imageFetcher.js
+
+
 figma.ui.onmessage = async (msg) => {
-    if (msg.type === "get-selected-component") {
-        const selectedNode = figma.currentPage.selection[0];
-        if (!selectedNode || selectedNode.type !== "COMPONENT") {
-            figma.notify("Please select a component get selected component.");
-            return;
-        }
-        console.log(selectedNode);
-        console.log(selectedNode.type);
-        // Get all child elements of the selected component
-        const elements = selectedNode.children.map((child) => ({
-            name: child.name,
-            id: child.id,
-            type: child.type,
-           
-            // Add more properties as needed
-        }));
-        // Send back the component name and its elements to the UI
-        figma.ui.postMessage({
-            type: "update-component-name",
-            name: selectedNode.name,
-            elements,
-        });
-        return; // Exit after processing selection request.
+  if (msg.type === "get-selected-component") {
+    const selectedNode = figma.currentPage.selection[0];
+    if (!selectedNode || selectedNode.type !== "COMPONENT") {
+      figma.notify("Please select a component get selected component.");
+      return;
     }
-    if (msg.type === "duplicate-component") {
-        console.log("duplicate-component");
-        console.log("component");
-        const selectedNode = figma.currentPage.selection[0];
-        if (!selectedNode || selectedNode.type !== "COMPONENT") {
-            figma.notify("Please select a component.");
-            return;
-        }
-        // Notify user of selection
-        figma.notify(`Selected Component: ${selectedNode.name}`);
-        const variants = [];
-        console.log(msg);
-        for (let i = 0; i < 4; i++) {
-            //   const newVariant = selectedNode.clone();
-            const newInstance = selectedNode.createInstance();
-            console.log(newInstance);
-            console.log(msg.replacements);
-            console.log("msg");
-            console.log(msg);
-            // newVariant.name = `${selectedNode.name} Variant ${i + 1}`;
-            const elements = msg.replacements;
-            //   console.log("elements", elements);
-            //   console.log(elements);
-            //   Replace specified elements based on AI prompts
-            //   for (const replacement of elements) {
-            //     console.log("for ");
-            //     console.log(elements);
-            //     console.log(replacement);
-            //     console.log(`for ${replacement}`);
-            console.log("newInstance");
-            console.log(newInstance);
-            console.log("newInstance");
-            console.log(newInstance.children[0]);
-            const newArray = newInstance.children.filter((child) => child.id.slice(-7) === elements.id);
-            if (newArray.length > 0) {
-                const targetNode = newArray[0]; // Assuming there's only one node with the matching ID
-                console.log(targetNode.name);
-                console.log(targetNode.type);
-                if (targetNode.type === "TEXT") {
-                    await modifyTextNode(targetNode, elements.prompt);
-                }
-                if (targetNode.type === "RECTANGLE") {
-                    //await modifyImageNode(child, imageBytes); 
-                }
-            }
-            else {
-                console.log("No matching node found.");
-            }
-            newInstance === null || newInstance === void 0 ? void 0 : newInstance.children.forEach(async (child, index) => {
-                console.log(`Child ${index + 1}: ${child.name} (Type: ${child.type})`);
-                if (child.type === "TEXT") {
-                    // console.log(child)
-                    // console.log(elements.name)
-                    // console.log(child.name)
-                    //   await modifyTextNode(child,  elements.prompt);
-                }
-                //         if (child.type === "RECTANGLE") {
-                //         //   await modifyImageNode(child, imageBytes);
-                //         }
-            });
-            //   }
-            figma.currentPage.appendChild(newInstance);
-        }
-        figma.notify(`${variants.length} variants created!`);
-        // figma.closePlugin();
+    console.log(selectedNode);
+    console.log(selectedNode.type);
+    // Get all child elements of the selected component
+    const elements = selectedNode.children.map((child) => ({
+      name: child.name,
+      id: child.id,
+      type: child.type,
+
+      // Add more properties as needed
+    }));
+    // Send back the component name and its elements to the UI
+    figma.ui.postMessage({
+      type: "update-component-name",
+      name: selectedNode.name,
+      elements,
+    });
+    return; // Exit after processing selection request.
+  }
+  if (msg.type === "duplicate-component") {
+    console.log("duplicate-component");
+    console.log("component");
+    const selectedNode = figma.currentPage.selection[0];
+    if (!selectedNode || selectedNode.type !== "COMPONENT") {
+      figma.notify("Please select a component.");
+      return;
     }
+    // Notify user of selection
+    figma.notify(`Selected Component: ${selectedNode.name}`);
+      const variants = [];
+       const responseText = [
+         { text1: "The king is born today" },
+         { text2: "The king is born tomorrow" },
+         { text3: "The king is born on the 10th" },
+         { text4: "You are succesful today" },
+       ];
+    console.log(msg);
+    for (let i = 0; i < 4; i++) {
+      //   const newVariant = selectedNode.clone();
+      const newInstance = selectedNode.createInstance();
+      console.log(newInstance);
+      console.log(msg.replacements);
+      console.log("msg");
+      console.log(msg);
+      // newVariant.name = `${selectedNode.name} Variant ${i + 1}`;
+      const elements = msg.replacements;
+      console.log("newInstance");
+      console.log(newInstance);
+      console.log("newInstance");
+      console.log(newInstance.children[0]);
+      const newArray = newInstance.children.filter(
+        (child) => child.id.slice(-7) === elements.id
+      );
+      if (newArray.length > 0) {
+        const targetNode = newArray[0]; // Assuming there's only one node with the matching ID
+        console.log(targetNode.name);
+        console.log(targetNode.type);
+          if (targetNode.type === "TEXT") {
+            
+          await modifyTextNode(targetNode, elements.prompt);
+        }
+        if (targetNode.type === "RECTANGLE") {
+          //await modifyImageNode(child, imageBytes);
+        }
+      } else {
+        console.log("No matching node found.");
+      }
+      newInstance === null || newInstance === void 0
+        ? void 0
+        : newInstance.children.forEach(async (child, index) => {
+            console.log(
+              `Child ${index + 1}: ${child.name} (Type: ${child.type})`
+            );
+            if (child.type === "TEXT") {         
+            }
+          });
+      //   }
+      figma.currentPage.appendChild(newInstance);
+    }
+    figma.notify(`${variants.length} variants created!`);
+    // figma.closePlugin();
+  }
 };
 // when using .clone() method
 // for (const replacement of elements) {

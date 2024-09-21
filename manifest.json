@@ -9,7 +9,14 @@
   "editorType": ["figma"],
   "ui": "./perplex/perplex.html",
   "networkAccess": {
-    "allowedDomains": ["https://fonts.googleapis.com", "https://fonts.gstatic.com", "https://picsum.photos", "https://fastly.picsum.photos"]
+    "allowedDomains": [
+      "https://fonts.googleapis.com",
+      "https://fonts.gstatic.com",
+      "https://picsum.photos",
+      "https://fastly.picsum.photos",
+      "https://media.istockphoto.com"
+    ],
+    "devAllowedDomains": ["http://localhost:3000"]
   }
 
 }

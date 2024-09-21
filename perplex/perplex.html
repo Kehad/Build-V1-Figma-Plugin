@@ -33,6 +33,7 @@
         /* justify-content: space-between; */
         z-index: 100;
         /* background-color: green; */
+        /* padding: 2rem; */
       }
       .hidden {
         display: none;
@@ -42,6 +43,8 @@
         align-self: flex-end;
         margin-right: 3rem;
         margin-bottom: 2rem;
+        /* position: fixed;
+        bottom: 0; */
       }
       .button__next {
         background-color: #b2db11;
@@ -193,12 +196,50 @@
         background-color: #b2db11;
         color: #000;
         font-weight: 600;
-        
+
         padding: 10px 15px;
         border-radius: 5px;
         border: none;
         display: flex;
         justify-content: flex-end;
+      }
+
+      /* ------------------------------------------------------------------------------------- */
+      /* ------------- GALLERY --------------------------- */
+      /* ------------------------------------------------------------------------------------- */
+      .gallery__box {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        gap: 35px;
+        height: 100%;
+        padding: 1rem;
+      }
+
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* 2 equal columns */
+        grid-gap: 10px; /* Space between the grid items */
+      }
+
+      .hidden {
+        display: none;
+      }
+      .grid-item {
+        /* height: 300px; */
+        width: 100px;
+        height: fit-content;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+
+      .grid-item img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 8px; /* Optional: to round the image corners */
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional: to add shadow */
       }
 
       /* button {
@@ -221,7 +262,7 @@
   <body>
     <!-- <h2>Create Component Variants</h2> -->
     <div class="box">
-      <div class="content__box">
+      <div class="content__box ">
         <div class="duplicate__box">
           <h5 class="duplicate">
             Select the number of component you want to duplicate
@@ -293,6 +334,11 @@
         </div>
       </div>
 
+      <div class="gallery__box hidden">
+        <div class="grid-container"></div>
+        <button id="" class="prompt__button" disabled>Enter New Prompt</button>
+      </div>
+
       <div class="button__box">
         <button id="generateVariants" class="prompt__button" disabled>
           Generate Variants
@@ -311,7 +357,6 @@
       const promptInput = document.querySelector(".prompt__input");
       const promptLabel = document.querySelector(".prompt__label");
       const promptButton = document.querySelector(".prompt__button");
-     
 
       // Listen for messages from Figma about selected component details
       window.onmessage = (event) => {
@@ -367,7 +412,9 @@
         // //   <input type="text" placeholder="AI Prompt" class="aiPrompt" />
         // singleElement.appendChild(div);
         promptLabel.textContent = ElementName.name;
-        promptInput.placeholder = `Enter Prompt to replace ${ElementName.type === 'TEXT' ? 'text' : 'image'} here`;
+        promptInput.placeholder = `Enter Prompt to replace ${
+          ElementName.type === "TEXT" ? "text" : "image"
+        } here`;
 
         if (!selectionBoxState && promptBoxState) {
           console.log("selectionBoxState");
@@ -431,7 +478,7 @@
             "*"
           );
           selectionBox.classList.remove("hidden");
-        } 
+        }
 
         // to show selection element
         if (!contentBoxState && selectionBoxState) {
@@ -448,6 +495,60 @@
         { pluginMessage: { type: "get-selected-component" } },
         "*"
       );
+
+     
+
+      const ImgBox = document.querySelector(".grid-container");
+      async function fetchImage(url) {
+        // Create an image element
+        const img = document.createElement("img");
+
+        // Fetch the image
+        fetch(url)
+          .then((response) => {
+            // Check if the response is ok (status in the range 200-299)
+            console.log(response.ok);
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            // Convert the response to a blob
+            return response.blob();
+          })
+          .then((blob) => {
+            // Create a URL for the blob
+            console.log(blob);
+            const objectURL = URL.createObjectURL(blob);
+            // Set the image source to the object URL
+            console.log(objectURL);
+            img.src = objectURL;
+            img.classList.add("grid-item");
+            // Append the image to the body
+            ImgBox.appendChild(img);
+          })
+          .catch((e) => {
+            console.error(
+              "There was a problem with the fetch operation: " + e.message
+            );
+          });
+      }
+
+      // Usage example
+      fetchImage(
+        "https://media.istockphoto.com/id/1696167872/photo/aerial-view-of-forest-at-sunset-on-the-background-of-mountains-in-dolomites.jpg?s=1024x1024&w=is&k=20&c=sfRAnSjXlDxAAAMZ0ZtYG5GpetUCOqETKyVc0Oz6kyU="
+      );
+      fetchImage(
+        "https://media.istockphoto.com/id/1696167872/photo/aerial-view-of-forest-at-sunset-on-the-background-of-mountains-in-dolomites.jpg?s=1024x1024&w=is&k=20&c=sfRAnSjXlDxAAAMZ0ZtYG5GpetUCOqETKyVc0Oz6kyU="
+      );
+      fetchImage(
+        "https://media.istockphoto.com/id/1696167872/photo/aerial-view-of-forest-at-sunset-on-the-background-of-mountains-in-dolomites.jpg?s=1024x1024&w=is&k=20&c=sfRAnSjXlDxAAAMZ0ZtYG5GpetUCOqETKyVc0Oz6kyU="
+      );
+      fetchImage(
+        "https://media.istockphoto.com/id/1696167872/photo/aerial-view-of-forest-at-sunset-on-the-background-of-mountains-in-dolomites.jpg?s=1024x1024&w=is&k=20&c=sfRAnSjXlDxAAAMZ0ZtYG5GpetUCOqETKyVc0Oz6kyU="
+      );
+      fetchImage(
+        "https://media.istockphoto.com/id/1696167872/photo/aerial-view-of-forest-at-sunset-on-the-background-of-mountains-in-dolomites.jpg?s=1024x1024&w=is&k=20&c=sfRAnSjXlDxAAAMZ0ZtYG5GpetUCOqETKyVc0Oz6kyU="
+      );
+
     </script>
   </body>
 </html>
